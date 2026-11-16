@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { CHECKOUT, PRESETS, formatWon } from '../data/content.js';
 import { findProduct } from '../data/products.js';
+import { BUNDLE, priceLines } from '../data/pricing.js';
 import { useLight } from '../context/LightContext.jsx';
 import { useCart } from '../context/CartContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -31,6 +32,7 @@ const clampQty = (n) => (Number.isInteger(n) && n >= 1 ? Math.min(n, CHECKOUT.ma
 
 // P-04 주문서 — 데모 결제: 입력 확인 후 실제 결제 없이 주문 완료로 넘어간다
 // - 바로 구매: /checkout?item=bulb&qty=2 (장바구니는 건드리지 않음)
+//   세트 바로 구매: /checkout?item=lamp,bulb (각 상품을 qty개씩)
 // - 장바구니 주문: /checkout (장바구니 상품 전체, 주문하면 장바구니를 비움)
 export default function Checkout() {
   const navigate = useNavigate();
@@ -44,8 +46,9 @@ export default function Checkout() {
   // 예전 링크(/checkout?qty=2)는 무드 조명 바로 구매로 본다
   const direct = params.has('item') || params.has('qty');
   const [directLines, setDirectLines] = useState(() => {
-    const id = findProduct(params.get('item')) ? params.get('item') : 'lamp';
-    return [{ id, qty: clampQty(Number(params.get('qty') ?? 1)) }];
+    const ids = [...new Set((params.get('item') ?? '').split(',').filter((id) => findProduct(id)))];
+    const qty = clampQty(Number(params.get('qty') ?? 1));
+    return (ids.length ? ids : ['lamp']).map((id) => ({ id, qty }));
   });
   const lines = (direct ? directLines : cart.items)
     .map((l) => ({ ...l, product: findProduct(l.id) }))
@@ -80,8 +83,7 @@ export default function Checkout() {
     setErrors((prev) => without(prev, 'address'));
   }, []);
 
-  const subtotal = lines.reduce((n, l) => n + l.product.price * l.qty, 0);
-  const total = subtotal + CHECKOUT.shippingFee;
+  const { sets, discount, shipping, total } = priceLines(lines);
   const field = (key) => ({
     value: form[key],
     onChange: (e) => {
@@ -113,6 +115,7 @@ export default function Checkout() {
       no: makeOrderNo(),
       items: lines.map((l) => ({ id: l.id, name: l.product.name, price: l.product.price, qty: l.qty })),
       qty: count,
+      ...(discount ? { discount } : {}),
       total,
       pay: method.name,
       name: form.name.trim(),
@@ -164,7 +167,7 @@ export default function Checkout() {
   }
 
   const back = direct
-    ? { to: `/product/${lines[0].id}`, label: '← 상품 정보로 돌아가기' }
+    ? { to: lines.length > 1 ? '/product' : `/product/${lines[0].id}`, label: '← 상품 정보로 돌아가기' }
     : { to: '/cart', label: '← 장바구니로 돌아가기' };
 
   return (
@@ -287,9 +290,17 @@ export default function Checkout() {
                   <dd>{formatWon(l.product.price * l.qty)}</dd>
                 </div>
               ))}
+              {discount > 0 && (
+                <div className="co-sum__discount">
+                  <dt>
+                    {BUNDLE.label} × {sets}
+                  </dt>
+                  <dd>−{formatWon(discount)}</dd>
+                </div>
+              )}
               <div>
                 <dt>배송비</dt>
-                <dd>{CHECKOUT.shippingFee ? formatWon(CHECKOUT.shippingFee) : '무료'}</dd>
+                <dd>{shipping ? formatWon(shipping) : '무료'}</dd>
               </div>
               <div className="co-sum__total">
                 <dt>총 결제 금액</dt>

@@ -4,6 +4,7 @@ import { formatWon } from '../data/content.js';
 import { useCart } from '../context/CartContext.jsx';
 import { useLight } from '../context/LightContext.jsx';
 import { ProductImage } from './ProductVisual.jsx';
+import WishButton from './WishButton.jsx';
 
 // 상품 목록·메인 라인업에 쓰는 카드. 체험한 빛 색으로 이미지를 보여 준다.
 export default function ProductCard({ product }) {
@@ -21,6 +22,7 @@ export default function ProductCard({ product }) {
       <Link to={`/product/${product.id}`} className="pcard__visual" aria-label={`${product.name} 자세히 보기`}>
         <ProductImage id={product.id} color={color.hex} brightness={brightness} />
       </Link>
+      <WishButton product={product} className="pcard__wish" />
       <div className="pcard__body">
         <p className="pcard__tagline">{product.tagline}</p>
         <h3 className="pcard__name">

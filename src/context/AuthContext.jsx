@@ -58,6 +58,15 @@ export function AuthProvider({ children }) {
       logout() {
         setEmail(null);
       },
+      // 찜하기: 상품 id를 넣거나 뺀다 (회원 정보에 함께 저장 → 탈퇴하면 함께 지워짐)
+      isWished: (id) => Boolean(email && members[email]?.wish?.includes(id)),
+      toggleWish(id) {
+        if (!email) return;
+        setMembers((m) => {
+          const wish = m[email].wish ?? [];
+          return { ...m, [email]: { ...m[email], wish: wish.includes(id) ? wish.filter((w) => w !== id) : [...wish, id] } };
+        });
+      },
       // 기본 배송지 저장/삭제 — address: { zonecode, address, detail } | null
       saveAddress(address) {
         if (!email) return;

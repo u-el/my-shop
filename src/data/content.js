@@ -27,12 +27,12 @@ export const DEFAULT_PRESET_ID = 'rest';
 export const findColor = (id) => COLORS.find((c) => c.id === id) ?? COLORS[0];
 export const findPreset = (id) => PRESETS.find((p) => p.id === id);
 
-// S-01-03 메인 특징 — 무드 조명 상품 정보(products.js)와 같은 내용을 쉬운 말로 (임시안: 문구)
+// S-01-03 메인 특징 — 두 제품(products.js)에 공통인 내용을 쉬운 말로 (임시안: 문구)
 export const FEATURES = [
   { icon: 'color', title: '원하는 빛 그대로', desc: '차가운 달빛부터 따뜻한 촛불 빛까지, 그날 기분에 맞는 색을 골라요.' },
   { icon: 'dim', title: '단계 없는 밝기', desc: '1%의 은은한 빛부터 100%의 환한 빛까지 부드럽게 조절해요.' },
-  { icon: 'touch', title: '터치 한 번, 앱으로도', desc: '본체를 톡 건드리거나 전용 앱으로 멀리서도 바꿀 수 있어요.' },
-  { icon: 'battery', title: '선 없이 어디서나', desc: 'USB-C로 충전하면 최대 8시간. 손바닥만 한 크기라 어디든 둘 수 있어요.' },
+  { icon: 'touch', title: '앱 하나로 함께', desc: '무드 조명과 전구를 한 앱에서 같은 색으로 켜요. 무드 조명은 본체 터치로도 바꿀 수 있어요.' },
+  { icon: 'pair', title: '두고 쓰거나, 끼워 쓰거나', desc: '충전식 무드 조명은 어디에나 두고, 스마트 전구는 지금 쓰는 소켓에 끼우기만 하면 돼요.' },
 ];
 
 // S-01-04 후기
@@ -59,7 +59,7 @@ export const REVIEWS = [
     room: '신혼집 침실',
     presetId: 'sleep',
     rating: 4,
-    text: '잠들기 전에 밝기를 아주 낮게 해 두면 눈이 편해요. 앱으로도 끌 수 있어서 침대에서 일어날 필요가 없어요.',
+    text: '천장 전구랑 무드 조명을 같은 캔들 색으로 맞춰 두니 침실 전체가 아늑해졌어요. 잠들기 전에 앱으로 한 번에 꺼요.',
   },
 ];
 

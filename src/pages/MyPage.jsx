@@ -1,10 +1,12 @@
 import { useRef, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { formatWon } from '../data/content.js';
-import { orderLines } from '../data/products.js';
+import { findProduct, orderLines } from '../data/products.js';
 import { ordersOf } from '../data/orders.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import OrderInfo from '../components/OrderInfo.jsx';
+import WishButton from '../components/WishButton.jsx';
+import { ProductThumb } from '../components/ProductVisual.jsx';
 import Reveal from '../components/Reveal.jsx';
 
 const fmtDate = (iso, time = false) =>
@@ -33,6 +35,7 @@ export default function MyPage() {
 
   const orders = ordersOf(user.email);
   const addr = user.address;
+  const wished = (user.wish ?? []).map(findProduct).filter(Boolean);
 
   return (
     <section className="section section--tight">
@@ -79,6 +82,29 @@ export default function MyPage() {
           </Reveal>
 
           <div className="mypage__side">
+            {/* 찜한 상품 */}
+            <Reveal as="section" className="co-card" delay={0.08}>
+              <h2 className="co-card__title">찜한 상품</h2>
+              {wished.length ? (
+                <ul className="mp-wish">
+                  {wished.map((p) => (
+                    <li key={p.id}>
+                      <Link to={`/product/${p.id}`} className="mp-wish__item">
+                        <ProductThumb id={p.id} />
+                        <span>
+                          <strong>{p.name}</strong>
+                          {formatWon(p.price)}
+                        </span>
+                      </Link>
+                      <WishButton product={p} />
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mp-muted">상품의 하트를 누르면 여기에 모여요.</p>
+              )}
+            </Reveal>
+
             {/* 기본 배송지 */}
             <Reveal as="section" className="co-card" delay={0.1}>
               <h2 className="co-card__title">기본 배송지</h2>

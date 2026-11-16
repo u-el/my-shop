@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { PRODUCTS } from '../data/products.js';
 import ProductCard from '../components/ProductCard.jsx';
+import BundleCard from '../components/BundleCard.jsx';
 import Reveal from '../components/Reveal.jsx';
 
 // P-03 제품 목록 — 무드 조명 · 스마트 전구
@@ -23,6 +24,9 @@ export default function ProductList() {
             </Reveal>
           ))}
         </div>
+        <Reveal className="bundle-wrap" delay={0.2}>
+          <BundleCard />
+        </Reveal>
       </div>
     </section>
   );

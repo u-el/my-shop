@@ -52,6 +52,12 @@ export default function OrderInfo({ order, showStatus = false }) {
         <dt>결제 수단</dt>
         <dd>{order.pay}</dd>
       </div>
+      {order.discount > 0 && (
+        <div>
+          <dt>세트 할인</dt>
+          <dd>−{formatWon(order.discount)}</dd>
+        </div>
+      )}
       <div className="done__total">
         <dt>결제 금액</dt>
         <dd>{formatWon(order.total)}</dd>

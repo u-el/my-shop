@@ -5,10 +5,12 @@ import bulbPhoto from '../assets/product-bulb.jpg';
 // - 색: 빛나는 부분(x, y)을 중심으로 고른 색을 'color' 혼합으로 입혀 사진의 따뜻한 빛을 그 색으로 바꾼다
 // - 밝기: 어두울수록 사진 전체를 살짝 가라앉히고, 빛 번짐도 작아진다
 // 두 사진 모두 10:11 비율이고, x·y는 사진 안에서 빛나는 유리구의 중심 위치(%)
+// soft: 유리구가 화면 대부분을 차지하는 사진은 색을 강하게 덮으면 밝기 차이가 사라져 그림처럼 보이므로,
+//       밝기는 그대로 두고 색조만 바꾸는 약한 방식으로 입힌다
 
 const PHOTOS = {
   lamp: { src: lampPhoto, x: '51%', y: '38%' },
-  bulb: { src: bulbPhoto, x: '50%', y: '38%' },
+  bulb: { src: bulbPhoto, x: '50%', y: '38%', soft: true },
 };
 
 const DEFAULT_COLOR = '#ffaa5c';
@@ -19,7 +21,7 @@ export function ProductImage({ id, color = DEFAULT_COLOR, brightness = 60, alt =
   const b = brightness / 100;
   return (
     <div
-      className="lamp-photo"
+      className={`lamp-photo${photo.soft ? ' lamp-photo--soft' : ''}`}
       style={{
         '--c': color,
         '--lx': photo.x,

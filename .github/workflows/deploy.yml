@@ -24,6 +24,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # 테스트가 하나라도 실패하면 배포하지 않는다
+      - run: npm test
       - run: npm run build
       # 하위 페이지를 직접 열어도 200으로 응답하도록 경로별 index.html 생성 (+ 그 외 경로용 404.html)
       - run: |

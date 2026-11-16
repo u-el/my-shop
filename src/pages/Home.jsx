@@ -6,6 +6,7 @@ import Reveal from '../components/Reveal.jsx';
 import { COLORS, FEATURES, PRESETS, REVIEWS, REVIEWS_ARE_SAMPLES, findColor, findPreset } from '../data/content.js';
 import { PRODUCTS } from '../data/products.js';
 import ProductCard from '../components/ProductCard.jsx';
+import BundleCard from '../components/BundleCard.jsx';
 
 // 특징 카드 아이콘 (선 아이콘, currentColor)
 const ICONS = {
@@ -28,11 +29,14 @@ const ICONS = {
       <path d="M12 7.5v4" />
     </>
   ),
-  battery: (
+  // 무드 조명 + 전구
+  pair: (
     <>
-      <rect x="2.5" y="7" width="17" height="10" rx="2.5" />
-      <path d="M21.5 10.5v3" />
-      <path d="m11.5 9-2 3.2h3L10.5 15" />
+      <circle cx="7.5" cy="10" r="4" />
+      <path d="M7.5 14v4M4.5 20h6" />
+      <path d="M16.5 3v3" />
+      <path d="M16.5 6a3.5 3.5 0 0 1 2 6.4V14h-4v-1.6a3.5 3.5 0 0 1 2-6.4Z" />
+      <path d="M15 16.5h3" />
     </>
   ),
 };
@@ -58,7 +62,7 @@ export default function Home() {
           scrollHint="스크롤해서 불을 켜 보세요"
           useWindowScroll
         >
-          <p className="eyebrow eyebrow--light">스마트 무드 조명</p>
+          <p className="eyebrow eyebrow--light">스마트 무드 조명 · 스마트 전구</p>
           <p className="hero__body">
             원하는 색과 밝기로 하루의 분위기를 바꾸는 루무드.
             <br />
@@ -75,7 +79,7 @@ export default function Home() {
         <div className="container">
           <Reveal className="features__head">
             <p className="eyebrow">루무드의 특징</p>
-            <h2>작은 조명 하나로, 방의 표정이 바뀌어요</h2>
+            <h2>빛 하나 바꿨을 뿐인데, 방의 표정이 바뀌어요</h2>
           </Reveal>
           <ul className="features__list">
             {FEATURES.map((f, i) => (
@@ -152,6 +156,9 @@ export default function Home() {
               </Reveal>
             ))}
           </div>
+          <Reveal className="bundle-wrap" delay={0.2}>
+            <BundleCard />
+          </Reveal>
         </div>
       </section>
 

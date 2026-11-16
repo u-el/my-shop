@@ -7,6 +7,8 @@ import { useCart } from '../context/CartContext.jsx';
 import Reveal from '../components/Reveal.jsx';
 import QtyStepper from '../components/QtyStepper.jsx';
 import ProductCard from '../components/ProductCard.jsx';
+import BundleCard from '../components/BundleCard.jsx';
+import WishButton from '../components/WishButton.jsx';
 import { ProductImage } from '../components/ProductVisual.jsx';
 import NotFound from './NotFound.jsx';
 
@@ -53,7 +55,10 @@ function ProductDetail({ product }) {
             <p className="eyebrow">
               <Link to="/product">제품</Link> · {product.short}
             </p>
-            <h1>{product.name}</h1>
+            <div className="detail__title">
+              <h1>{product.name}</h1>
+              <WishButton product={product} />
+            </div>
             <p className="detail__price">
               <strong>{product.price.toLocaleString('ko-KR')}</strong>원
             </p>
@@ -154,6 +159,9 @@ function ProductDetail({ product }) {
               {others.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
+            </div>
+            <div className="bundle-wrap">
+              <BundleCard />
             </div>
           </div>
         </section>

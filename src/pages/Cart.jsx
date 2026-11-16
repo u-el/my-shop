@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { CHECKOUT, formatWon } from '../data/content.js';
+import { formatWon } from '../data/content.js';
 import { PRODUCTS, findProduct } from '../data/products.js';
+import { BUNDLE, bundlePrice, priceLines } from '../data/pricing.js';
 import { useCart } from '../context/CartContext.jsx';
 import QtyStepper from '../components/QtyStepper.jsx';
 import Reveal from '../components/Reveal.jsx';
@@ -8,12 +9,11 @@ import { ProductThumb } from '../components/ProductVisual.jsx';
 
 // P-08 장바구니
 export default function Cart() {
-  const { items, setQty, remove } = useCart();
+  const { items, add, setQty, remove } = useCart();
   const navigate = useNavigate();
   const lines = items.map((l) => ({ ...l, product: findProduct(l.id) })).filter((l) => l.product);
-  const subtotal = lines.reduce((n, l) => n + l.product.price * l.qty, 0);
-  const total = subtotal + (lines.length ? CHECKOUT.shippingFee : 0);
-  // 아직 담지 않은 상품은 아래에서 바로 권한다
+  const { subtotal, sets, discount, shipping, total } = priceLines(items);
+  // 아직 담지 않은 상품은 아래에서 세트 할인과 함께 권한다
   const missing = PRODUCTS.filter((p) => !items.some((l) => l.id === p.id));
 
   return (
@@ -55,13 +55,19 @@ export default function Cart() {
                 ))}
               </ul>
               {missing.length > 0 && (
-                <p className="cart-suggest">
+                <div className="cart-suggest co-card">
                   {missing.map((p) => (
-                    <span key={p.id}>
-                      <Link to={`/product/${p.id}`}>{p.name}</Link>도 같은 색으로 함께 켤 수 있어요.
-                    </span>
+                    <p key={p.id}>
+                      <span>
+                        <Link to={`/product/${p.id}`}>{p.name}</Link>도 같은 색으로 함께 켤 수 있어요.{' '}
+                        <strong>함께 사면 {formatWon(bundlePrice().discount)} 할인</strong>
+                      </span>
+                      <button type="button" className="btn btn--ghost" onClick={() => add(p.id, 1)}>
+                        함께 담기
+                      </button>
+                    </p>
                   ))}
-                </p>
+                </div>
               )}
             </div>
 
@@ -72,9 +78,17 @@ export default function Cart() {
                   <dt>상품 금액</dt>
                   <dd>{formatWon(subtotal)}</dd>
                 </div>
+                {discount > 0 && (
+                  <div className="co-sum__discount">
+                    <dt>
+                      {BUNDLE.label} × {sets}
+                    </dt>
+                    <dd>−{formatWon(discount)}</dd>
+                  </div>
+                )}
                 <div>
                   <dt>배송비</dt>
-                  <dd>{CHECKOUT.shippingFee ? formatWon(CHECKOUT.shippingFee) : '무료'}</dd>
+                  <dd>{shipping ? formatWon(shipping) : '무료'}</dd>
                 </div>
                 <div className="co-sum__total">
                   <dt>합계</dt>
