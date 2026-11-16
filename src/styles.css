@@ -621,3 +621,8 @@ legend.co-card__title + * { clear: both; }
 
 /* 페이지 불러오는 동안 자리 유지 */
 .page-loading { min-height: 70vh; }
+
+/* 체험: 둘 다 켰을 때 세트 구매 */
+.exp-bundle { margin-top: 12px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }
+.exp-bundle p { margin: 0; font-size: 14px; color: var(--ink-soft); text-align: center; }
+.exp-bundle strong { color: var(--accent); }

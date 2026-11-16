@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Room from '../components/Room.jsx';
 import CometDial from '../components/CometDial/CometDial.jsx';
-import { COLORS, PRESETS, findColor } from '../data/content.js';
+import { COLORS, PRESETS, findColor, formatWon } from '../data/content.js';
+import { BUNDLE, bundlePrice } from '../data/pricing.js';
 import { useLight } from '../context/LightContext.jsx';
 import Reveal from '../components/Reveal.jsx';
 
@@ -177,6 +178,17 @@ export default function Experience() {
             <Link to={next.to} className="btn btn--primary btn--block">
               {next.label}
             </Link>
+            {/* 둘 다 켜 봤다면 세트로 바로 살 수 있게 */}
+            {fixture === 'both' && (
+              <div className="exp-bundle">
+                <p>
+                  둘을 함께 사면 <strong>{formatWon(bundlePrice().discount)} 할인</strong> · 세트 {formatWon(bundlePrice().sale)}
+                </p>
+                <Link to={`/checkout?item=${BUNDLE.ids.join(',')}`} className="btn btn--ghost btn--block">
+                  이 분위기로 세트 구매하기
+                </Link>
+              </div>
+            )}
           </Reveal>
         </div>
       </div>

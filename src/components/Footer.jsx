@@ -12,7 +12,7 @@ export default function Footer() {
             <Link to="/" className="gnb__logo">
               LUMOOD
             </Link>
-            <p>나만의 공간을 비추는 스마트 무드 조명</p>
+            <p>나만의 공간을 비추는 스마트 무드 조명 · 스마트 전구</p>
           </div>
 
           <nav className="footer__col" aria-label="쇼핑 바로가기">

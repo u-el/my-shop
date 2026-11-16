@@ -1,25 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { findOrder, hasSavedOrders, ordersOf, readLastOrder, removeOrdersOf, saveOrder } from './orders.js';
 
-// 테스트는 Node에서 돌아서 브라우저 저장소를 간단히 흉내 낸다
-const memoryStorage = () => {
-  let data = {};
-  return {
-    getItem: (k) => (k in data ? data[k] : null),
-    setItem: (k, v) => {
-      data[k] = String(v);
-    },
-    removeItem: (k) => {
-      delete data[k];
-    },
-    clear: () => {
-      data = {};
-    },
-  };
-};
-globalThis.localStorage = memoryStorage();
-globalThis.sessionStorage = memoryStorage();
-
+// 브라우저 저장소는 src/test/setup.js가 메모리로 흉내 낸다
 const order = (no, extra = {}) => ({ no, phone: '010-1234-5678', total: 52000, ...extra });
 
 beforeEach(() => {

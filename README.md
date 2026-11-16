@@ -27,7 +27,7 @@
 ```bash
 npm install
 npm run dev      # 개발 서버 (http://localhost:5173)
-npm test         # 계산·주문 저장 로직 테스트
+npm test         # 가격 계산·주문 저장 + 화면 동작(가입·세트 주문·찜·메뉴) 테스트
 npm run build    # 배포용 빌드 (dist/)
 ```
 
