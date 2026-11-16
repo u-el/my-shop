@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Room from '../components/Room.jsx';
+import CometDial from '../components/CometDial/CometDial.jsx';
 import { COLORS, PRESETS, findColor } from '../data/content.js';
 import { useLight } from '../context/LightContext.jsx';
 
@@ -123,18 +124,22 @@ export default function Experience() {
             <div className="panel__group">
               <div className="panel__row">
                 <h2 className="panel__title">밝기</h2>
-                <span className="panel__value">{brightness}%</span>
               </div>
-              <input
-                className="range"
-                type="range"
-                min="5"
-                max="100"
-                value={brightness}
-                style={{ '--p': `${((brightness - 5) / 95) * 100}%`, '--c': color.hex }}
-                onChange={(e) => setBrightness(Number(e.target.value))}
-                aria-label="밝기"
-              />
+              {/* 다이얼을 돌리거나 튕기면 밝기가 바뀐다 (값은 다이얼 가운데에 표시) */}
+              <div className="panel__dial">
+                <CometDial
+                  value={brightness}
+                  min={5}
+                  max={100}
+                  step={1}
+                  unit="%"
+                  label="밝기"
+                  accent="#c4703a"
+                  ink="#3a2e26"
+                  size={220}
+                  onChange={setBrightness}
+                />
+              </div>
             </div>
 
             <p className="panel__hint">조절하는 즉시 왼쪽 공간에 반영돼요.</p>

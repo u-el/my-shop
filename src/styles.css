@@ -114,6 +114,7 @@ p { margin: 0; }
 .panel__title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
 .panel__row { display: flex; justify-content: space-between; align-items: baseline; }
 .panel__value { font-size: 14px; color: var(--ink-soft); font-weight: 600; }
+.panel__dial { display: flex; justify-content: center; }
 .panel__hint { font-size: 14px; color: var(--ink-soft); margin-top: -8px; }
 
 .presets { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
