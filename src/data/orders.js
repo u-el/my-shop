@@ -1,10 +1,12 @@
-// 비회원 주문 저장·조회 (데모)
+// 주문 저장·조회 (데모)
 // 서버가 없어 이 브라우저의 localStorage에만 최근 주문을 저장한다.
 // 그래서 주문한 브라우저에서만 조회할 수 있다.
+// - 비회원: 주문 번호 + 휴대폰 번호로 조회
+// - 데모 회원: 주문에 memberEmail을 남겨 마이페이지에서 모아 본다
 
 const LIST_KEY = 'lumood:orders';
 const LAST_KEY = 'lumood:lastOrder';
-const MAX_ORDERS = 10;
+const MAX_ORDERS = 20;
 
 const digits = (s) => String(s ?? '').replace(/\D/g, '');
 
@@ -41,6 +43,18 @@ export const findOrder = (no, phone) => {
 };
 
 export const hasSavedOrders = () => readList().length > 0;
+
+// 데모 회원의 주문 (최근 순)
+export const ordersOf = (email) => readList().filter((o) => o.memberEmail === email);
+
+// 회원 탈퇴 시 그 회원의 주문 기록을 지운다
+export const removeOrdersOf = (email) => {
+  try {
+    localStorage.setItem(LIST_KEY, JSON.stringify(readList().filter((o) => o.memberEmail !== email)));
+  } catch {
+    /* 무시 */
+  }
+};
 
 export const clearOrders = () => {
   try {

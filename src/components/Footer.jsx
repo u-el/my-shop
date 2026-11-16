@@ -21,6 +21,7 @@ export default function Footer() {
             <Link to="/product/lamp">무드 조명</Link>
             <Link to="/product/bulb">스마트 전구</Link>
             <Link to="/cart">장바구니</Link>
+            <Link to="/mypage">마이페이지</Link>
             <Link to="/order-lookup">비회원 주문 조회</Link>
           </nav>
 

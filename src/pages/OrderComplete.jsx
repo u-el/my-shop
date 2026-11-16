@@ -39,13 +39,25 @@ export default function OrderComplete() {
 
         <OrderInfo order={order} />
         <p className="done__hint">
-          주문 번호 <strong>{order.no}</strong>와 휴대폰 번호로 언제든 주문을 조회할 수 있어요.
+          {order.memberEmail ? (
+            <>주문 내역은 마이페이지에서 언제든 볼 수 있어요.</>
+          ) : (
+            <>
+              주문 번호 <strong>{order.no}</strong>와 휴대폰 번호로 언제든 주문을 조회할 수 있어요.
+            </>
+          )}
         </p>
 
         <div className="done__actions">
-          <Link to={`/order-lookup?no=${order.no}`} className="btn btn--ghost">
-            주문 조회
-          </Link>
+          {order.memberEmail ? (
+            <Link to="/mypage" className="btn btn--ghost">
+              주문 내역 보기
+            </Link>
+          ) : (
+            <Link to={`/order-lookup?no=${order.no}`} className="btn btn--ghost">
+              주문 조회
+            </Link>
+          )}
           <Link to="/experience" className="btn btn--primary">
             다른 분위기 체험하기
           </Link>

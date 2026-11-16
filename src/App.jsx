@@ -7,6 +7,9 @@ import Experience from './pages/Experience.jsx';
 import Product from './pages/Product.jsx';
 import ProductList from './pages/ProductList.jsx';
 import Cart from './pages/Cart.jsx';
+import Login from './pages/Login.jsx';
+import Signup from './pages/Signup.jsx';
+import MyPage from './pages/MyPage.jsx';
 import Checkout from './pages/Checkout.jsx';
 import OrderComplete from './pages/OrderComplete.jsx';
 import Legal from './pages/Legal.jsx';
@@ -22,6 +25,9 @@ const TITLES = {
   '/product/lamp': '무드 조명',
   '/product/bulb': '스마트 전구',
   '/cart': '장바구니',
+  '/login': '로그인',
+  '/signup': '회원가입',
+  '/mypage': '마이페이지',
   '/checkout': '주문서 작성',
   '/order-complete': '주문 완료',
   '/order-lookup': '비회원 주문 조회',
@@ -61,6 +67,9 @@ export default function App() {
           <Route path="/product" element={<ProductList />} />
           <Route path="/product/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/mypage" element={<MyPage />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-complete" element={<OrderComplete />} />
           <Route path="/order-lookup" element={<OrderLookup />} />

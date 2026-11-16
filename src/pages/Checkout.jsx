@@ -1,9 +1,10 @@
 import { useCallback, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { CHECKOUT, PRESETS, formatWon } from '../data/content.js';
 import { findProduct } from '../data/products.js';
 import { useLight } from '../context/LightContext.jsx';
 import { useCart } from '../context/CartContext.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 import QtyStepper from '../components/QtyStepper.jsx';
 import AddressSearch from '../components/AddressSearch.jsx';
 import { saveOrder } from '../data/orders.js';
@@ -38,6 +39,8 @@ export default function Checkout() {
   const moodName = presetId ? PRESETS.find((p) => p.id === presetId).name : '나만의 조합';
 
   const cart = useCart();
+  const { user, saveAddress } = useAuth();
+  const location = useLocation();
   // 예전 링크(/checkout?qty=2)는 무드 조명 바로 구매로 본다
   const direct = params.has('item') || params.has('qty');
   const [directLines, setDirectLines] = useState(() => {
@@ -50,7 +53,17 @@ export default function Checkout() {
   const changeQty = (id, qty) =>
     direct ? setDirectLines((ls) => ls.map((l) => (l.id === id ? { ...l, qty: clampQty(qty) } : l))) : cart.setQty(id, qty);
   const count = lines.reduce((n, l) => n + l.qty, 0);
-  const [form, setForm] = useState({ name: '', phone: '', zonecode: '', address: '', detail: '', memo: MEMOS[0], memoText: '' });
+  // 데모 회원이면 이름·휴대폰·기본 배송지를 미리 채운다
+  const [form, setForm] = useState(() => ({
+    name: user?.name ?? '',
+    phone: user?.phone ?? '',
+    zonecode: user?.address?.zonecode ?? '',
+    address: user?.address?.address ?? '',
+    detail: user?.address?.detail ?? '',
+    memo: MEMOS[0],
+    memoText: '',
+  }));
+  const [saveAddr, setSaveAddr] = useState(true);
   const [pay, setPay] = useState(CHECKOUT.payMethods[0].id);
   const [agree, setAgree] = useState(false);
   const [errors, setErrors] = useState({});
@@ -108,6 +121,7 @@ export default function Checkout() {
       address: `${form.zonecode ? `[${form.zonecode}] ` : ''}${form.address.trim()} ${form.detail.trim()}`.trim(),
       mood: `${moodName} · ${color.name} · ${brightness}%`,
       colorHex: color.hex,
+      ...(user ? { memberEmail: user.email } : {}),
     };
     setPayNotice('');
     // 간편결제는 데모 승인 창을 먼저 띄운다
@@ -124,6 +138,7 @@ export default function Checkout() {
   const complete = (order) => {
     saveOrder(order);
     if (!direct) cart.clear();
+    if (user && saveAddr) saveAddress({ zonecode: form.zonecode, address: form.address.trim(), detail: form.detail.trim() });
     navigate('/order-complete', { state: order, replace: true });
   };
   const approveSheet = () => complete(sheetOrder);
@@ -156,9 +171,17 @@ export default function Checkout() {
     <section className="section section--tight">
       <div className="container">
         <Reveal as="header" className="page-head">
-          <p className="eyebrow">비회원 주문</p>
+          <p className="eyebrow">{user ? '회원 주문' : '비회원 주문'}</p>
           <h1>주문서 작성</h1>
-          <p>회원가입 없이 바로 주문할 수 있어요. 주문 후에는 주문 번호와 휴대폰 번호로 주문을 조회할 수 있어요.</p>
+          {user ? (
+            <p>{user.name}님의 정보로 미리 채웠어요. 주문 내역은 마이페이지에서 볼 수 있어요.</p>
+          ) : (
+            <p>
+              회원가입 없이 바로 주문할 수 있어요. 주문 후에는 주문 번호와 휴대폰 번호로 조회할 수 있어요.{' '}
+              <Link to={`/login?next=${encodeURIComponent(location.pathname + location.search)}`}>로그인</Link>하면 배송지를 저장하고
+              주문 내역을 모아 볼 수 있어요.
+            </p>
+          )}
           <p className="demo-note">데모 결제예요. 결제 버튼을 눌러도 실제로 돈이 나가지 않아요.</p>
         </Reveal>
 
@@ -217,6 +240,12 @@ export default function Checkout() {
                   <span>상세 주소</span>
                   <input id="co-detail" autoComplete="address-line2" placeholder="동·호수 (선택)" {...field('detail')} />
                 </label>
+                {user && (
+                  <label className="co-agree co-field--wide">
+                    <input type="checkbox" checked={saveAddr} onChange={(e) => setSaveAddr(e.target.checked)} />이 배송지를 기본
+                    배송지로 저장할게요.
+                  </label>
+                )}
                 <label className="co-field co-field--wide">
                   <span>배송 메모</span>
                   <select {...field('memo')}>

@@ -5,6 +5,7 @@ import { MotionConfig } from 'motion/react';
 import App from './App.jsx';
 import { LightProvider } from './context/LightContext.jsx';
 import { CartProvider } from './context/CartContext.jsx';
+import { AuthProvider } from './context/AuthContext.jsx';
 import './styles.css';
 
 createRoot(document.getElementById('root')).render(
@@ -12,9 +13,11 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <MotionConfig reducedMotion="user">
         <LightProvider>
-          <CartProvider>
-            <App />
-          </CartProvider>
+          <AuthProvider>
+            <CartProvider>
+              <App />
+            </CartProvider>
+          </AuthProvider>
         </LightProvider>
       </MotionConfig>
     </BrowserRouter>

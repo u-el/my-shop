@@ -500,3 +500,53 @@ legend.co-card__title + * { clear: both; }
   .product-thumb { width: 72px; height: 72px; }
   .pcard__actions, .purchase__btns { grid-template-columns: 1fr; }
 }
+
+/* ---------- 데모 회원 ---------- */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* 헤더 로그인/마이페이지 */
+.gnb__nav .gnb__account { display: inline-flex; align-items: center; gap: 6px; }
+.gnb__account svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+
+/* 로그인·회원가입 */
+.auth { max-width: 520px; }
+.auth__head { text-align: center; }
+.auth__head .demo-note { margin-left: auto; margin-right: auto; }
+.auth__form { display: flex; flex-direction: column; gap: 16px; }
+.auth__error { margin: 0; }
+.auth__switch { margin: 0; text-align: center; font-size: 14px; color: var(--ink-soft); }
+.auth__switch a { color: var(--accent); font-weight: 600; }
+.auth__agree { margin: 4px 0 0; padding: 16px; border: 1px solid var(--line); border-radius: var(--radius-sm); display: flex; flex-direction: column; gap: 10px; }
+.auth__agree-all { padding-bottom: 10px; border-bottom: 1px solid var(--line); color: var(--ink); font-weight: 700; }
+.auth__agree a { color: var(--ink); text-decoration: underline; }
+
+/* 마이페이지 */
+.mypage__grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 24px; align-items: start; }
+.mypage__side { display: flex; flex-direction: column; gap: 24px; }
+.mp-orders { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.mp-order { border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.mp-order summary { list-style: none; cursor: pointer; padding: 16px 18px; display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; }
+.mp-order summary::-webkit-details-marker { display: none; }
+.mp-order summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mp-order__date { grid-column: 1 / -1; font-size: 13px; color: var(--ink-soft); }
+.mp-order__meta { font-size: 13px; color: var(--ink-soft); }
+.mp-order__total { grid-row: 2 / 4; grid-column: 2; align-self: center; font-weight: 800; }
+.mp-order[open] summary { border-bottom: 1px solid var(--line); }
+.mp-order .done__info { margin: 0; border: 0; box-shadow: none; border-radius: 0; }
+.mp-empty { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; color: var(--ink-soft); }
+.mp-empty p, .mp-addr, .mp-muted { margin: 0; }
+.mp-addr { line-height: 1.7; }
+.mp-muted { color: var(--ink-soft); font-size: 14px; }
+.mp-link { margin-top: 10px; padding: 0; border: 0; background: none; font: inherit; font-size: 14px; color: var(--ink-soft); text-decoration: underline; cursor: pointer; }
+.mp-link:hover { color: var(--ink); }
+.mp-actions { margin-top: 18px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.mp-withdraw { margin-top: 10px; padding: 14px; border-radius: var(--radius-sm); background: #fff1ec; font-size: 14px; }
+.mp-withdraw p { margin: 0 0 10px; color: #8a2f1d; }
+.mp-withdraw__btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mp-withdraw__yes { border: 0; background: #c2412d; color: #fff; font-weight: 700; }
+
+@media (max-width: 960px) { .mypage__grid { grid-template-columns: 1fr; } }
+@media (max-width: 560px) {
+  .gnb__account-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .gnb__nav { gap: 12px; }
+}
