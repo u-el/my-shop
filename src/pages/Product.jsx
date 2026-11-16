@@ -2,30 +2,27 @@ import { Link } from 'react-router-dom';
 import { PRESETS, PRODUCT, STORE } from '../data/content.js';
 import { useLight } from '../context/LightContext.jsx';
 import Reveal from '../components/Reveal.jsx';
+import lampPhoto from '../assets/product-lamp.jpg';
 
-function LampIllustration({ color, brightness }) {
+// 실제 램프 사진 위에, 체험에서 고른 빛 색과 밝기를 겹쳐 보여 준다.
+// - 색: 전구 주변에 고른 색을 'color' 혼합으로 입혀 사진의 따뜻한 빛을 그 색으로 바꾼다
+// - 밝기: 어두울수록 사진 전체를 살짝 가라앉히고, 빛 번짐도 작아진다
+function LampPhoto({ color, brightness }) {
   const b = brightness / 100;
   return (
-    <svg viewBox="0 0 400 440" role="img" aria-label={`${PRODUCT.name} 제품 이미지`}>
-      <defs>
-        <radialGradient id="productGlow" cx="200" cy="190" r={120 + 140 * b} gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor={color} stopOpacity={0.55 + 0.4 * b} />
-          <stop offset="1" stopColor={color} stopOpacity="0" />
-        </radialGradient>
-        <radialGradient id="productGlobe" cx="0.42" cy="0.38" r="0.7">
-          <stop offset="0" stopColor="#fffaf2" />
-          <stop offset="0.55" stopColor={color} stopOpacity="0.85" />
-          <stop offset="1" stopColor={color} />
-        </radialGradient>
-      </defs>
-      <rect width="400" height="440" fill="#2c221b" />
-      <rect className="lamp-glow" width="400" height="440" fill="url(#productGlow)" />
-      <ellipse cx="200" cy="378" rx="120" ry="14" fill="#000" opacity="0.25" />
-      <path d="M150 360 q50 -18 100 0 v12 q-50 14 -100 0 z" fill="#d9cbb8" />
-      <rect x="192" y="290" width="16" height="72" rx="4" fill="#cdbca6" />
-      <circle cx="200" cy="200" r="100" fill="url(#productGlobe)" />
-      <ellipse cx="168" cy="160" rx="26" ry="16" fill="#fff" opacity="0.35" transform="rotate(-30 168 160)" />
-    </svg>
+    <div
+      className="lamp-photo"
+      style={{
+        '--c': color,
+        '--glow': `${18 + 22 * b}%`,
+        '--dim': (1 - b) * 0.55,
+      }}
+    >
+      <img src={lampPhoto} alt={`${PRODUCT.name} 제품 사진`} />
+      <span className="lamp-photo__tint" aria-hidden="true" />
+      <span className="lamp-photo__glow lamp-glow" aria-hidden="true" />
+      <span className="lamp-photo__dim" aria-hidden="true" />
+    </div>
   );
 }
 
@@ -41,7 +38,7 @@ export default function Product() {
       <section className="section section--tight">
         <div className="container detail">
           <Reveal className="detail__visual" from="scale">
-            <LampIllustration color={color.hex} brightness={brightness} />
+            <LampPhoto color={color.hex} brightness={brightness} />
           </Reveal>
           <Reveal className="detail__copy" from="right" delay={0.15}>
             <p className="eyebrow">상품 정보</p>
