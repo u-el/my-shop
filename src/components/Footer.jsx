@@ -20,6 +20,7 @@ export default function Footer() {
             <Link to="/experience">가상 체험하기</Link>
             <Link to="/product">상품 정보</Link>
             <Link to="/checkout">바로 구매하기</Link>
+            <Link to="/order-lookup">비회원 주문 조회</Link>
           </nav>
 
           <div className="footer__col footer__cs">

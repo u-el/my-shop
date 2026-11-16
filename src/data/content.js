@@ -86,7 +86,9 @@ export const CHECKOUT = {
   maxQty: 5,
   payMethods: [
     { id: 'card', name: '신용·체크카드' },
-    { id: 'easy', name: '간편결제' },
+    // 간편결제: 데모 승인 창을 거친다 (실제 결제사와 연결 안 됨). mark는 공식 로고가 아닌 글자 배지
+    { id: 'kakaopay', name: '카카오페이', easy: true, brand: 'kakao', mark: 'K' },
+    { id: 'naverpay', name: '네이버페이', easy: true, brand: 'naver', mark: 'N' },
     { id: 'bank', name: '무통장 입금' },
   ],
 };

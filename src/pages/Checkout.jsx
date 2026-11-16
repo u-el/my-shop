@@ -4,6 +4,8 @@ import { CHECKOUT, PRESETS, PRODUCT, formatWon } from '../data/content.js';
 import { useLight } from '../context/LightContext.jsx';
 import QtyStepper from '../components/QtyStepper.jsx';
 import AddressSearch from '../components/AddressSearch.jsx';
+import { saveOrder } from '../data/orders.js';
+import DemoPaySheet from '../components/DemoPaySheet.jsx';
 import Reveal from '../components/Reveal.jsx';
 import lampPhoto from '../assets/product-lamp.jpg';
 
@@ -38,6 +40,10 @@ export default function Checkout() {
   const [agree, setAgree] = useState(false);
   const [errors, setErrors] = useState({});
   const [paying, setPaying] = useState(false);
+  // 간편결제 데모 승인 창에 넘길 주문 (null이면 닫힘)
+  const [sheetOrder, setSheetOrder] = useState(null);
+  const [payNotice, setPayNotice] = useState('');
+  const method = CHECKOUT.payMethods.find((m) => m.id === pay);
   const [addrOpen, setAddrOpen] = useState(false);
   const closeAddr = useCallback(() => setAddrOpen(false), []);
   // 주소 검색에서 고르면 우편번호·주소를 채우고 상세 주소 칸으로 이동
@@ -81,27 +87,42 @@ export default function Checkout() {
       no: makeOrderNo(),
       qty,
       total,
-      pay: CHECKOUT.payMethods.find((m) => m.id === pay).name,
+      pay: method.name,
       name: form.name.trim(),
+      phone: form.phone.trim(),
+      orderedAt: new Date().toISOString(),
       address: `${form.zonecode ? `[${form.zonecode}] ` : ''}${form.address.trim()} ${form.detail.trim()}`.trim(),
       mood: `${moodName} · ${color.name} · ${brightness}%`,
       colorHex: color.hex,
     };
-    try {
-      sessionStorage.setItem('lumood:lastOrder', JSON.stringify(order));
-    } catch {
-      /* 저장 못 해도 화면 이동에는 문제없음 */
+    setPayNotice('');
+    // 간편결제는 데모 승인 창을 먼저 띄운다
+    if (method.easy) {
+      setSheetOrder(order);
+      return;
     }
     // 데모: 결제창 대신 잠깐 기다린 뒤 완료 화면으로
-    setTimeout(() => navigate('/order-complete', { state: order, replace: true }), 900);
+    setTimeout(() => complete(order), 900);
   };
+
+  const complete = (order) => {
+    saveOrder(order);
+    navigate('/order-complete', { state: order, replace: true });
+  };
+  const approveSheet = () => complete(sheetOrder);
+  const cancelSheet = useCallback(() => {
+    setSheetOrder(null);
+    setPaying(false);
+    setPayNotice('결제를 취소했어요. 다시 시도하거나 다른 결제 수단을 골라 주세요.');
+  }, []);
 
   return (
     <section className="section section--tight">
       <div className="container">
         <Reveal as="header" className="page-head">
-          <p className="eyebrow">주문하기</p>
+          <p className="eyebrow">비회원 주문</p>
           <h1>주문서 작성</h1>
+          <p>회원가입 없이 바로 주문할 수 있어요. 주문 후에는 주문 번호와 휴대폰 번호로 주문을 조회할 수 있어요.</p>
           <p className="demo-note">데모 결제예요. 결제 버튼을 눌러도 실제로 돈이 나가지 않아요.</p>
         </Reveal>
 
@@ -174,6 +195,11 @@ export default function Checkout() {
                 {CHECKOUT.payMethods.map((m) => (
                   <label key={m.id} className={`co-pay__opt${pay === m.id ? ' is-active' : ''}`}>
                     <input type="radio" name="pay" value={m.id} checked={pay === m.id} onChange={() => setPay(m.id)} />
+                    {m.mark && (
+                      <span className={`pay-badge pay-badge--${m.brand}`} aria-hidden="true">
+                        {m.mark}
+                      </span>
+                    )}
                     {m.name}
                   </label>
                 ))}
@@ -209,14 +235,26 @@ export default function Checkout() {
             </label>
             {errors.agree && <em className="co-error">{errors.agree}</em>}
             <button type="submit" className="btn btn--primary btn--block btn--lg" disabled={paying}>
-              {paying ? '결제 중…' : `${formatWon(total)} 결제하기`}
+              {paying ? '결제 중…' : `${formatWon(total)} ${method.easy ? `${method.name}로 ` : ''}결제하기`}
             </button>
+            {payNotice && (
+              <p className="co-error co-paynotice" role="status">
+                {payNotice}
+              </p>
+            )}
             <Link to="/product" className="co-back">
               ← 상품 정보로 돌아가기
             </Link>
           </Reveal>
         </form>
         <AddressSearch open={addrOpen} onClose={closeAddr} onSelect={pickAddress} />
+        <DemoPaySheet
+          method={sheetOrder ? method : null}
+          amount={total}
+          qty={qty}
+          onApprove={approveSheet}
+          onCancel={cancelSheet}
+        />
       </div>
     </section>
   );

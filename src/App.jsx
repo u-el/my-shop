@@ -8,6 +8,7 @@ import Product from './pages/Product.jsx';
 import Checkout from './pages/Checkout.jsx';
 import OrderComplete from './pages/OrderComplete.jsx';
 import Legal from './pages/Legal.jsx';
+import OrderLookup from './pages/OrderLookup.jsx';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/product" element={<Product />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-complete" element={<OrderComplete />} />
+          <Route path="/order-lookup" element={<OrderLookup />} />
           <Route path="/terms" element={<Legal docId="terms" />} />
           <Route path="/privacy" element={<Legal docId="privacy" />} />
           <Route path="/refund" element={<Legal docId="refund" />} />

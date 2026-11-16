@@ -1,14 +1,8 @@
 import { Link, useLocation } from 'react-router-dom';
-import { PRODUCT, formatWon } from '../data/content.js';
+import { PRODUCT } from '../data/content.js';
+import { readLastOrder } from '../data/orders.js';
+import OrderInfo from '../components/OrderInfo.jsx';
 import Reveal from '../components/Reveal.jsx';
-
-const readLastOrder = () => {
-  try {
-    return JSON.parse(sessionStorage.getItem('lumood:lastOrder'));
-  } catch {
-    return null;
-  }
-};
 
 // P-05 주문 완료 — 새로고침해도 같은 탭에서는 마지막 주문을 다시 보여 준다
 export default function OrderComplete() {
@@ -44,41 +38,14 @@ export default function OrderComplete() {
         </p>
         <p className="demo-note">데모 주문이라 실제 결제와 배송은 이루어지지 않아요.</p>
 
-        <dl className="done__info co-card">
-          <div>
-            <dt>주문 번호</dt>
-            <dd>{order.no}</dd>
-          </div>
-          <div>
-            <dt>상품</dt>
-            <dd>
-              {PRODUCT.name} × {order.qty}
-            </dd>
-          </div>
-          <div>
-            <dt>체험한 분위기</dt>
-            <dd>
-              <i style={{ background: order.colorHex }} />
-              {order.mood}
-            </dd>
-          </div>
-          <div>
-            <dt>배송지</dt>
-            <dd>{order.address}</dd>
-          </div>
-          <div>
-            <dt>결제 수단</dt>
-            <dd>{order.pay}</dd>
-          </div>
-          <div className="done__total">
-            <dt>결제 금액</dt>
-            <dd>{formatWon(order.total)}</dd>
-          </div>
-        </dl>
+        <OrderInfo order={order} />
+        <p className="done__hint">
+          주문 번호 <strong>{order.no}</strong>와 휴대폰 번호로 언제든 주문을 조회할 수 있어요.
+        </p>
 
         <div className="done__actions">
-          <Link to="/" className="btn btn--ghost">
-            메인으로
+          <Link to={`/order-lookup?no=${order.no}`} className="btn btn--ghost">
+            주문 조회
           </Link>
           <Link to="/experience" className="btn btn--primary">
             다른 분위기 체험하기
