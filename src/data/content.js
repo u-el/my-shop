@@ -41,6 +41,14 @@ export const PRODUCT = {
   ],
 };
 
+// S-01-03 메인 특징 — 상품 정보(PRODUCT.specs)와 같은 내용을 쉬운 말로 (임시안: 문구)
+export const FEATURES = [
+  { icon: 'color', title: '원하는 빛 그대로', desc: '차가운 달빛부터 따뜻한 촛불 빛까지, 그날 기분에 맞는 색을 골라요.' },
+  { icon: 'dim', title: '단계 없는 밝기', desc: '1%의 은은한 빛부터 100%의 환한 빛까지 부드럽게 조절해요.' },
+  { icon: 'touch', title: '터치 한 번, 앱으로도', desc: '본체를 톡 건드리거나 전용 앱으로 멀리서도 바꿀 수 있어요.' },
+  { icon: 'battery', title: '선 없이 어디서나', desc: 'USB-C로 충전하면 최대 8시간. 손바닥만 한 크기라 어디든 둘 수 있어요.' },
+];
+
 // B-03 외부 스토어 (임시안: 스토어 종류·주소 미정 → '#')
 export const STORE = {
   name: '외부 스토어',

@@ -3,7 +3,37 @@ import Room from '../components/Room.jsx';
 import ScrollExpand from '../components/ScrollExpand/ScrollExpand.jsx';
 import heroRoom from '../assets/hero-room.svg';
 import Reveal from '../components/Reveal.jsx';
-import { PRESETS, findColor } from '../data/content.js';
+import { COLORS, FEATURES, PRESETS, findColor } from '../data/content.js';
+
+// 특징 카드 아이콘 (선 아이콘, currentColor)
+const ICONS = {
+  color: (
+    <>
+      <path d="M12 3c3.5 4 6 7.2 6 10.2A6 6 0 0 1 6 13.2C6 10.2 8.5 7 12 3Z" />
+      <path d="M9.5 14.5a2.6 2.6 0 0 0 2.5 2" />
+    </>
+  ),
+  dim: (
+    <>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4" />
+    </>
+  ),
+  touch: (
+    <>
+      <rect x="7" y="2.5" width="10" height="19" rx="2.5" />
+      <path d="M10.5 18.5h3" />
+      <path d="M12 7.5v4" />
+    </>
+  ),
+  battery: (
+    <>
+      <rect x="2.5" y="7" width="17" height="10" rx="2.5" />
+      <path d="M21.5 10.5v3" />
+      <path d="m11.5 9-2 3.2h3L10.5 15" />
+    </>
+  ),
+};
 
 // P-01 메인 페이지 — 첫인상을 주고 체험으로 이끈다
 export default function Home() {
@@ -36,6 +66,34 @@ export default function Home() {
             지금 체험해 보기
           </Link>
         </ScrollExpand>
+      </section>
+
+      {/* S-01-03 특징 — 상품의 핵심을 네 가지로 */}
+      <section className="section features">
+        <div className="container">
+          <Reveal className="features__head">
+            <p className="eyebrow">루무드의 특징</p>
+            <h2>작은 조명 하나로, 방의 표정이 바뀌어요</h2>
+          </Reveal>
+          <ul className="features__list">
+            {FEATURES.map((f, i) => (
+              <Reveal as="li" key={f.title} className="feature" delay={0.1 + i * 0.1}>
+                <span className="feature__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">{ICONS[f.icon]}</svg>
+                </span>
+                <h3 className="feature__title">{f.title}</h3>
+                <p className="feature__desc">{f.desc}</p>
+                {f.icon === 'color' && (
+                  <span className="feature__colors" aria-hidden="true">
+                    {COLORS.map((c) => (
+                      <i key={c.id} style={{ background: c.hex }} />
+                    ))}
+                  </span>
+                )}
+              </Reveal>
+            ))}
+          </ul>
+        </div>
       </section>
 
       {/* S-01-02 체험 안내 — 조작 + 결과 장면을 함께, 같은 방 여러 분위기 */}
