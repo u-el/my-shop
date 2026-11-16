@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import Room from '../components/Room.jsx';
+import ScrollExpand from '../components/ScrollExpand/ScrollExpand.jsx';
+import heroRoom from '../assets/hero-room.svg';
 import { PRESETS, findColor } from '../data/content.js';
 
 // P-01 메인 페이지 — 첫인상을 주고 체험으로 이끈다
@@ -7,22 +9,32 @@ export default function Home() {
   return (
     <>
       {/* S-01-01 첫 화면 — 05 문서 7-3 ③: 가로 전체 이미지 + 겹친 짧은 제목 */}
+      {/* 스크롤하면 작은 액자 속 방이 화면 가득 커지고, 그 위로 소개 문구가 나타난다 */}
       <section className="hero">
-        <Room className="hero__room" color={findColor('amber').hex} brightness={62} slice />
-        <div className="hero__shade" />
-        <div className="container hero__copy">
+        <ScrollExpand
+          className="hero__expand"
+          src={heroRoom}
+          alt="앰버 빛 루무드가 켜진 자취방"
+          title={
+            <h1 className="hero__title">
+              불 하나 바꿨을 뿐인데,
+              <br />
+              방이 나를 닮아 가요
+            </h1>
+          }
+          scrollHint="스크롤해서 불을 켜 보세요"
+          useWindowScroll
+        >
           <p className="eyebrow eyebrow--light">스마트 무드 조명</p>
-          <h1>
-            불 하나 바꿨을 뿐인데,
-            <br />
-            방이 나를 닮아 가요
-          </h1>
           <p className="hero__body">
             원하는 색과 밝기로 하루의 분위기를 바꾸는 루무드.
             <br />
             사진 속 그 방처럼, 내 방도 따뜻하게 물들여 보세요.
           </p>
-        </div>
+          <Link to="/experience" className="btn btn--primary">
+            지금 체험해 보기
+          </Link>
+        </ScrollExpand>
       </section>
 
       {/* S-01-02 체험 안내 — 조작 + 결과 장면을 함께, 같은 방 여러 분위기 */}
