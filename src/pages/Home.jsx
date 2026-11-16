@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import Room from '../components/Room.jsx';
 import ScrollExpand from '../components/ScrollExpand/ScrollExpand.jsx';
 import heroRoom from '../assets/hero-room.svg';
+import Reveal from '../components/Reveal.jsx';
 import { PRESETS, findColor } from '../data/content.js';
 
 // P-01 메인 페이지 — 첫인상을 주고 체험으로 이끈다
@@ -40,13 +41,13 @@ export default function Home() {
       {/* S-01-02 체험 안내 — 조작 + 결과 장면을 함께, 같은 방 여러 분위기 */}
       <section className="section">
         <div className="container guide">
-          <div className="guide__visual">
+          <Reveal className="guide__visual" from="left">
             <div className="guide__grid">
-              {PRESETS.map((p) => (
-                <figure key={p.id} className="guide__scene">
+              {PRESETS.map((p, i) => (
+                <Reveal as="figure" key={p.id} className="guide__scene" from="scale" delay={0.15 + i * 0.1}>
                   <Room color={findColor(p.colorId).hex} brightness={p.brightness} slice title={`${p.name} 분위기의 방`} />
                   <figcaption>{p.name}</figcaption>
-                </figure>
+                </Reveal>
               ))}
             </div>
             <div className="guide__panel" aria-hidden="true">
@@ -60,9 +61,9 @@ export default function Home() {
                 ))}
               </span>
             </div>
-          </div>
+          </Reveal>
 
-          <div className="guide__copy">
+          <Reveal className="guide__copy" from="right" delay={0.15}>
             <p className="eyebrow">구매 전 가상 체험</p>
             <h2>사기 전에, 먼저 켜 보세요</h2>
             <p>
@@ -72,7 +73,7 @@ export default function Home() {
             <Link to="/experience" className="btn btn--primary">
               체험 시작하기
             </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
     </>

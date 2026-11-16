@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { PRESETS, PRODUCT, STORE } from '../data/content.js';
 import { useLight } from '../context/LightContext.jsx';
+import Reveal from '../components/Reveal.jsx';
 
 function LampIllustration({ color, brightness }) {
   const b = brightness / 100;
@@ -18,7 +19,7 @@ function LampIllustration({ color, brightness }) {
         </radialGradient>
       </defs>
       <rect width="400" height="440" fill="#2c221b" />
-      <rect width="400" height="440" fill="url(#productGlow)" />
+      <rect className="lamp-glow" width="400" height="440" fill="url(#productGlow)" />
       <ellipse cx="200" cy="378" rx="120" ry="14" fill="#000" opacity="0.25" />
       <path d="M150 360 q50 -18 100 0 v12 q-50 14 -100 0 z" fill="#d9cbb8" />
       <rect x="192" y="290" width="16" height="72" rx="4" fill="#cdbca6" />
@@ -39,28 +40,28 @@ export default function Product() {
       {/* S-03-01 상세 정보 */}
       <section className="section section--tight">
         <div className="container detail">
-          <div className="detail__visual">
+          <Reveal className="detail__visual" from="scale">
             <LampIllustration color={color.hex} brightness={brightness} />
-          </div>
-          <div className="detail__copy">
+          </Reveal>
+          <Reveal className="detail__copy" from="right" delay={0.15}>
             <p className="eyebrow">상품 정보</p>
             <h1>{PRODUCT.name}</h1>
             <p className="detail__summary">{PRODUCT.summary}</p>
             <dl className="specs">
-              {PRODUCT.specs.map((s) => (
-                <div key={s.label} className="specs__row">
+              {PRODUCT.specs.map((s, i) => (
+                <Reveal key={s.label} className="specs__row" delay={0.3 + i * 0.07}>
                   <dt>{s.label}</dt>
                   <dd>{s.value}</dd>
-                </div>
+                </Reveal>
               ))}
             </dl>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* S-03-02 구매 */}
       <section className="section buy">
-        <div className="container buy__inner">
+        <Reveal className="container buy__inner">
           <h2>체험한 분위기 그대로, 내 방으로</h2>
           <p>
             방금 고른 분위기를 기억해 두세요. 제품을 받으면 같은 색과 밝기로 바로 켤 수 있어요.
@@ -84,7 +85,7 @@ export default function Product() {
           >
             외부 스토어에서 구매하기 ↗
           </a>
-        </div>
+        </Reveal>
       </section>
     </>
   );

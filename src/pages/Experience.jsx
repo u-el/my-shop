@@ -4,6 +4,7 @@ import Room from '../components/Room.jsx';
 import CometDial from '../components/CometDial/CometDial.jsx';
 import { COLORS, PRESETS, findColor } from '../data/content.js';
 import { useLight } from '../context/LightContext.jsx';
+import Reveal from '../components/Reveal.jsx';
 
 // P-02 체험 페이지 — 핵심 행동이 일어나는 곳
 // 05 문서 7-3 ①: 가상 공간과 조절 도구(C-01~C-03)를 한 화면에 함께 배치
@@ -16,15 +17,15 @@ export default function Experience() {
   return (
     <section className="section section--tight">
       <div className="container">
-        <header className="page-head">
+        <Reveal as="header" className="page-head">
           <p className="eyebrow">가상 체험</p>
           <h1>내 방이 될 공간에, 불을 켜 보세요</h1>
           <p>장면을 고르거나 색과 밝기를 직접 바꾸면 방의 분위기가 바로 바뀌어요.</p>
-        </header>
+        </Reveal>
 
         <div className="studio">
           {/* S-02-01 가상 공간 (주변만 어둡게 처리해 빛을 돋보이게) */}
-          <div className="stage">
+          <Reveal className="stage" from="scale" delay={0.1}>
             <div className="stage__view">
               <Room color={color.hex} brightness={brightness} className="stage__room" />
               {compare && (
@@ -58,10 +59,10 @@ export default function Experience() {
                 일반 천장등과 비교
               </label>
             </div>
-          </div>
+          </Reveal>
 
           {/* 조절 패널 */}
-          <aside className="panel">
+          <Reveal as="aside" className="panel" from="right" delay={0.2}>
             {/* C-01 장면 프리셋 — 7-3 ②: 색 미리보기 + 이름 타일 */}
             <div className="panel__group">
               <h2 className="panel__title">장면 프리셋</h2>
@@ -148,7 +149,7 @@ export default function Experience() {
             <Link to="/product" className="btn btn--primary btn--block">
               이 분위기로 상품 정보 보기
             </Link>
-          </aside>
+          </Reveal>
         </div>
       </div>
     </section>

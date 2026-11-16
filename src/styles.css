@@ -65,7 +65,8 @@ p { margin: 0; }
 .hero { background: var(--stage); }
 .hero__expand .scroll-expand__stage { background: var(--stage); }
 .hero__title { margin: 0; font-size: inherit; line-height: 1.2; color: #fff8ef; }
-.hero__body { margin: 14px 0 28px; color: #f1e2d2; font-size: 18px; }
+.hero__body { margin: 14px 0 28px; color: #fff8ef; font-size: 18px; text-shadow: 0 1px 14px rgba(25, 16, 10, .75); }
+.hero__expand .eyebrow { text-shadow: 0 1px 10px rgba(25, 16, 10, .7); }
 .hero__expand .scroll-expand__hint { bottom: calc(72px + 1.5rem); color: rgba(255, 248, 239, .7); font-size: 14px; }
 
 /* P-01 체험 안내 */
@@ -162,4 +163,35 @@ p { margin: 0; }
   .gnb__nav { gap: 20px; }
   .stage__bar { flex-direction: column; align-items: flex-start; }
   .footer__inner { flex-direction: column; gap: 6px; }
+}
+
+/* ---------- 움직임 ---------- */
+/* 헤더: 스크롤하면 그림자 */
+.gnb { transition: box-shadow .25s ease, background .25s ease; }
+.gnb.is-scrolled { background: rgba(250, 245, 238, .94); box-shadow: 0 8px 24px -16px rgba(58, 46, 38, .45); }
+
+/* 버튼: 누를 때 살짝 눌림 */
+.btn:active { transform: translateY(1px) scale(.98); }
+
+/* 메인 장면 카드: 올리면 방이 조금 다가온다 */
+.guide__scene svg { transition: transform .5s cubic-bezier(.22, 1, .36, 1); }
+.guide__scene:hover svg { transform: scale(1.06); }
+
+/* 메인 조작 카드: 둥실 떠 있고, 밝기 막대가 천천히 오르내린다 */
+.guide__panel { animation: float 5s ease-in-out infinite; }
+.guide__panel-track span { animation: dim 4.5s ease-in-out infinite; }
+@keyframes float { 50% { transform: translateY(-8px); } }
+@keyframes dim { 0%, 100% { width: 38%; } 50% { width: 86%; } }
+
+/* 체험 페이지 프리셋: 올리면 살짝 떠오름 */
+.preset { transition: border-color .15s, background .15s, transform .2s ease, box-shadow .2s ease; }
+.preset:hover { transform: translateY(-2px); box-shadow: 0 8px 18px -12px rgba(58, 46, 38, .5); }
+
+/* 상품 램프: 빛이 숨 쉬듯 은은하게 */
+.lamp-glow { animation: breathe 4s ease-in-out infinite; }
+@keyframes breathe { 50% { opacity: .72; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .guide__panel, .guide__panel-track span, .lamp-glow { animation: none; }
+  .guide__scene:hover svg, .preset:hover { transform: none; }
 }
