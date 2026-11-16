@@ -3,10 +3,37 @@
 스마트 무드 조명과 스마트 전구를 파는 쇼핑몰 데모 사이트입니다.
 구매하기 전에 가상의 방에서 빛의 색과 밝기를 직접 바꿔 보는 **체험**이 핵심입니다.
 
-- 배포 주소: https://u-el.github.io/my-shop/
-- 기획 문서: [`docs/`](docs) (목적 → 구조 → 사이트맵 → 와이어프레임 → 레퍼런스 → 구현)
+**[▶ 사이트 바로 가기](https://u-el.github.io/my-shop/)** · 기획 문서: [`docs/`](docs) (목적 → 구조 → 사이트맵 → 와이어프레임 → 레퍼런스 → 구현)
+
+![메인 첫 화면 — 스크롤하면 작은 액자 속 방이 화면 가득 커진다](docs/screenshots/home.jpg)
 
 > ⚠ **데모 사이트입니다.** 결제는 실제로 일어나지 않고, 회원·주문 정보는 서버 없이 방문한 브라우저에만 저장됩니다.
+
+## 화면
+
+### 사기 전에, 먼저 켜 보기
+가상의 방에서 장면·색·밝기를 바꾸고, 무드 조명 / 스마트 전구 / 둘 다 켜 볼 수 있습니다. 고른 빛은 사이트 전체의 제품 사진에 그대로 입혀집니다.
+
+![가상 체험 — 무드 조명과 천장 전구를 같은 앰버 빛으로 켠 방](docs/screenshots/experience.jpg)
+
+| 메인 · 스크롤하면 방이 커지며 소개 등장 | 제품 라인업 |
+| --- | --- |
+| ![스크롤해서 커진 방 위의 소개 문구](docs/screenshots/home-expanded.jpg) | ![무드 조명과 스마트 전구 카드, 찜 버튼](docs/screenshots/lineup.jpg) |
+
+### 구매 흐름
+상품 상세 → 장바구니(세트 할인 자동 적용) → 주문서(도로명 주소 검색, 간편결제 데모) → 마이페이지 주문 내역
+
+| 상품 상세 | 장바구니 · 세트 할인 |
+| --- | --- |
+| ![스마트 전구 상세: 사진, 사양, 수량, 찜](docs/screenshots/product.jpg) | ![무드 조명 + 전구, 세트 할인 −6,800원](docs/screenshots/cart.jpg) |
+| **주문서 · 카카오페이 데모 승인** | **마이페이지** |
+| ![회원 정보가 미리 채워진 주문서와 카카오페이 데모 승인 창](docs/screenshots/checkout-pay.jpg) | ![주문 내역, 찜한 상품, 기본 배송지](docs/screenshots/mypage.jpg) |
+
+### 모바일
+
+| 메인 | 체험 | 메뉴 | 세트 할인 |
+| --- | --- | --- | --- |
+| <img src="docs/screenshots/m-home.jpg" alt="모바일 메인" width="200"> | <img src="docs/screenshots/m-experience.jpg" alt="모바일 체험" width="200"> | <img src="docs/screenshots/m-menu.jpg" alt="모바일 햄버거 메뉴" width="200"> | <img src="docs/screenshots/m-bundle.jpg" alt="모바일 세트 카드" width="200"> |
 
 ## 기능
 
