@@ -30,6 +30,8 @@ export const findPreset = (id) => PRESETS.find((p) => p.id === id);
 // P-03 상품 정보 (임시안: 상세 정보 항목·값)
 export const PRODUCT = {
   name: '루무드 무드 조명',
+  // 임시안: 충전식·앱 연동 소형 무드등 시장의 중간대(4~6만 원)에 맞춘 가격
+  price: 49000,
   summary:
     '손바닥만 한 크기로 침대 옆, 책상 위 어디에나 둘 수 있어요. 체험해 본 색상과 밝기를 그대로, 내 방에서 켜 보세요.',
   specs: [

@@ -43,6 +43,9 @@ export default function Product() {
           <Reveal className="detail__copy" from="right" delay={0.15}>
             <p className="eyebrow">상품 정보</p>
             <h1>{PRODUCT.name}</h1>
+            <p className="detail__price">
+              <strong>{PRODUCT.price.toLocaleString('ko-KR')}</strong>원
+            </p>
             <p className="detail__summary">{PRODUCT.summary}</p>
             <dl className="specs">
               {PRODUCT.specs.map((s, i) => (
@@ -80,7 +83,7 @@ export default function Product() {
               }
             }}
           >
-            외부 스토어에서 구매하기 ↗
+            {PRODUCT.price.toLocaleString('ko-KR')}원 · 외부 스토어에서 구매하기 ↗
           </a>
         </Reveal>
       </section>

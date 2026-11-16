@@ -136,7 +136,9 @@ p { margin: 0; }
 .detail { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
 .detail__visual { border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
 .detail__visual svg { display: block; width: 100%; height: auto; }
-.detail__summary { margin: 18px 0 32px; color: var(--ink-soft); max-width: 34em; }
+.detail__price { margin-top: 14px; font-size: 18px; font-weight: 600; color: var(--ink); }
+.detail__price strong { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; margin-right: 2px; }
+.detail__summary { margin: 14px 0 32px; color: var(--ink-soft); max-width: 34em; }
 .specs { margin: 0; border-top: 1px solid var(--line); }
 .specs__row { display: grid; grid-template-columns: 110px 1fr; padding: 16px 0; border-bottom: 1px solid var(--line); }
 .specs dt { font-weight: 700; }
