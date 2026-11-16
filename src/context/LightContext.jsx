@@ -10,6 +10,8 @@ export function LightProvider({ children }) {
   const [presetId, setPresetId] = useState(initial.id);
   const [colorId, setColorId] = useState(initial.colorId);
   const [brightness, setBrightnessState] = useState(initial.brightness);
+  // 체험에서 켜 볼 조명: 'lamp'(무드 조명) | 'bulb'(스마트 전구) | 'both'
+  const [fixture, setFixture] = useState('lamp');
 
   const value = useMemo(
     () => ({
@@ -17,6 +19,8 @@ export function LightProvider({ children }) {
       colorId,
       color: findColor(colorId),
       brightness,
+      fixture,
+      setFixture,
       applyPreset(id) {
         const p = findPreset(id);
         if (!p) return;
@@ -34,7 +38,7 @@ export function LightProvider({ children }) {
         setPresetId(null);
       },
     }),
-    [presetId, colorId, brightness],
+    [presetId, colorId, brightness, fixture],
   );
 
   return <LightContext.Provider value={value}>{children}</LightContext.Provider>;

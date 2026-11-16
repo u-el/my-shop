@@ -5,6 +5,8 @@ import Footer from './components/Footer.jsx';
 import Home from './pages/Home.jsx';
 import Experience from './pages/Experience.jsx';
 import Product from './pages/Product.jsx';
+import ProductList from './pages/ProductList.jsx';
+import Cart from './pages/Cart.jsx';
 import Checkout from './pages/Checkout.jsx';
 import OrderComplete from './pages/OrderComplete.jsx';
 import Legal from './pages/Legal.jsx';
@@ -16,7 +18,10 @@ const SITE = 'LUMOOD 루무드';
 const TITLES = {
   '/': SITE,
   '/experience': '가상 체험',
-  '/product': '상품 정보',
+  '/product': '제품',
+  '/product/lamp': '무드 조명',
+  '/product/bulb': '스마트 전구',
+  '/cart': '장바구니',
   '/checkout': '주문서 작성',
   '/order-complete': '주문 완료',
   '/order-lookup': '비회원 주문 조회',
@@ -53,7 +58,9 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/experience" element={<Experience />} />
-          <Route path="/product" element={<Product />} />
+          <Route path="/product" element={<ProductList />} />
+          <Route path="/product/:id" element={<Product />} />
+          <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-complete" element={<OrderComplete />} />
           <Route path="/order-lookup" element={<OrderLookup />} />

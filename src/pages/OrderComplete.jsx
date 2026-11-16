@@ -1,5 +1,4 @@
 import { Link, useLocation } from 'react-router-dom';
-import { PRODUCT } from '../data/content.js';
 import { readLastOrder } from '../data/orders.js';
 import OrderInfo from '../components/OrderInfo.jsx';
 import Reveal from '../components/Reveal.jsx';
@@ -14,9 +13,9 @@ export default function OrderComplete() {
       <section className="section section--tight">
         <div className="container done">
           <h1>주문 내역이 없어요</h1>
-          <p className="done__lead">상품 정보에서 다시 주문해 주세요.</p>
+          <p className="done__lead">제품 페이지에서 다시 주문해 주세요.</p>
           <Link to="/product" className="btn btn--primary">
-            상품 정보 보기
+            제품 보러 가기
           </Link>
         </div>
       </section>
@@ -34,7 +33,7 @@ export default function OrderComplete() {
         <p className="eyebrow">주문 완료</p>
         <h1>주문해 주셔서 고마워요</h1>
         <p className="done__lead">
-          {order.name}님, 곧 {PRODUCT.name}가 따뜻한 빛을 들고 찾아갈게요.
+          {order.name}님, 주문하신 루무드가 곧 따뜻한 빛을 들고 찾아갈게요.
         </p>
         <p className="demo-note">데모 주문이라 실제 결제와 배송은 이루어지지 않아요.</p>
 

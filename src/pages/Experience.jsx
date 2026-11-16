@@ -6,11 +6,19 @@ import { COLORS, PRESETS, findColor } from '../data/content.js';
 import { useLight } from '../context/LightContext.jsx';
 import Reveal from '../components/Reveal.jsx';
 
+const FIXTURES = [
+  { id: 'lamp', label: '무드 조명', hint: '협탁 위 무드 조명만 켜요. 은은하게 주변을 밝혀요.' },
+  { id: 'bulb', label: '스마트 전구', hint: '천장 전등 소켓에 끼운 스마트 전구로 방 전체를 물들여요.' },
+  { id: 'both', label: '둘 다', hint: '전구와 무드 조명을 같은 색으로 함께 켜요.' },
+];
+
 // P-02 체험 페이지 — 핵심 행동이 일어나는 곳
 // 05 문서 7-3 ①: 가상 공간과 조절 도구(C-01~C-03)를 한 화면에 함께 배치
 // 05 문서 7-3 ④: 일반 천장등과 비교해 보는 요소(C-04)
 export default function Experience() {
-  const { presetId, color, colorId, brightness, applyPreset, setColor, setBrightness } = useLight();
+  const { presetId, color, colorId, brightness, fixture, setFixture, applyPreset, setColor, setBrightness } = useLight();
+  // 체험한 조명에 맞는 제품으로 안내 (둘 다면 제품 목록)
+  const next = fixture === 'both' ? { to: '/product', label: '이 분위기로 제품 보기' } : { to: `/product/${fixture}`, label: `이 분위기로 ${fixture === 'bulb' ? '스마트 전구' : '무드 조명'} 보기` };
   const [compare, setCompare] = useState(false);
   const [split, setSplit] = useState(50);
 
@@ -27,7 +35,7 @@ export default function Experience() {
           {/* S-02-01 가상 공간 (주변만 어둡게 처리해 빛을 돋보이게) */}
           <Reveal className="stage" from="scale" delay={0.1}>
             <div className="stage__view">
-              <Room color={color.hex} brightness={brightness} className="stage__room" />
+              <Room color={color.hex} brightness={brightness} fixture={fixture} className="stage__room" />
               {compare && (
                 <>
                   <div className="stage__plain" style={{ clipPath: `inset(0 ${100 - split}% 0 0)` }}>
@@ -63,6 +71,26 @@ export default function Experience() {
 
           {/* 조절 패널 */}
           <Reveal as="aside" className="panel" from="right" delay={0.2}>
+            {/* C-00 켜 볼 조명 — 무드 조명 / 스마트 전구 / 둘 다 */}
+            <div className="panel__group">
+              <h2 className="panel__title">켜 볼 조명</h2>
+              <div className="seg" role="radiogroup" aria-label="켜 볼 조명">
+                {FIXTURES.map((f) => (
+                  <button
+                    key={f.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={fixture === f.id}
+                    className={`seg__opt${fixture === f.id ? ' is-active' : ''}`}
+                    onClick={() => setFixture(f.id)}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+              <p className="panel__hint panel__hint--left">{FIXTURES.find((f) => f.id === fixture).hint}</p>
+            </div>
+
             {/* C-01 장면 프리셋 — 7-3 ②: 색 미리보기 + 이름 타일 */}
             <div className="panel__group">
               <h2 className="panel__title">장면 프리셋</h2>
@@ -146,8 +174,8 @@ export default function Experience() {
             <p className="panel__hint">조절하는 즉시 왼쪽 공간에 반영돼요.</p>
 
             {/* B-02 */}
-            <Link to="/product" className="btn btn--primary btn--block">
-              이 분위기로 상품 정보 보기
+            <Link to={next.to} className="btn btn--primary btn--block">
+              {next.label}
             </Link>
           </Reveal>
         </div>

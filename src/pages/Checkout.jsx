@@ -1,13 +1,15 @@
 import { useCallback, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { CHECKOUT, PRESETS, PRODUCT, formatWon } from '../data/content.js';
+import { CHECKOUT, PRESETS, formatWon } from '../data/content.js';
+import { findProduct } from '../data/products.js';
 import { useLight } from '../context/LightContext.jsx';
+import { useCart } from '../context/CartContext.jsx';
 import QtyStepper from '../components/QtyStepper.jsx';
 import AddressSearch from '../components/AddressSearch.jsx';
 import { saveOrder } from '../data/orders.js';
 import DemoPaySheet from '../components/DemoPaySheet.jsx';
 import Reveal from '../components/Reveal.jsx';
-import lampPhoto from '../assets/product-lamp.jpg';
+import { ProductThumb } from '../components/ProductVisual.jsx';
 
 const MEMOS = ['문 앞에 놓아 주세요', '경비실에 맡겨 주세요', '배송 전에 연락 주세요', '직접 입력'];
 
@@ -24,17 +26,30 @@ const makeOrderNo = () => {
   return `LM-${ymd}-${Math.floor(1000 + Math.random() * 9000)}`;
 };
 
+const clampQty = (n) => (Number.isInteger(n) && n >= 1 ? Math.min(n, CHECKOUT.maxQty) : 1);
+
 // P-04 주문서 — 데모 결제: 입력 확인 후 실제 결제 없이 주문 완료로 넘어간다
+// - 바로 구매: /checkout?item=bulb&qty=2 (장바구니는 건드리지 않음)
+// - 장바구니 주문: /checkout (장바구니 상품 전체, 주문하면 장바구니를 비움)
 export default function Checkout() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const { presetId, color, brightness } = useLight();
   const moodName = presetId ? PRESETS.find((p) => p.id === presetId).name : '나만의 조합';
 
-  const [qty, setQty] = useState(() => {
-    const n = Number(params.get('qty'));
-    return Number.isInteger(n) && n >= 1 ? Math.min(n, CHECKOUT.maxQty) : 1;
+  const cart = useCart();
+  // 예전 링크(/checkout?qty=2)는 무드 조명 바로 구매로 본다
+  const direct = params.has('item') || params.has('qty');
+  const [directLines, setDirectLines] = useState(() => {
+    const id = findProduct(params.get('item')) ? params.get('item') : 'lamp';
+    return [{ id, qty: clampQty(Number(params.get('qty') ?? 1)) }];
   });
+  const lines = (direct ? directLines : cart.items)
+    .map((l) => ({ ...l, product: findProduct(l.id) }))
+    .filter((l) => l.product);
+  const changeQty = (id, qty) =>
+    direct ? setDirectLines((ls) => ls.map((l) => (l.id === id ? { ...l, qty: clampQty(qty) } : l))) : cart.setQty(id, qty);
+  const count = lines.reduce((n, l) => n + l.qty, 0);
   const [form, setForm] = useState({ name: '', phone: '', zonecode: '', address: '', detail: '', memo: MEMOS[0], memoText: '' });
   const [pay, setPay] = useState(CHECKOUT.payMethods[0].id);
   const [agree, setAgree] = useState(false);
@@ -52,7 +67,7 @@ export default function Checkout() {
     setErrors((prev) => without(prev, 'address'));
   }, []);
 
-  const subtotal = PRODUCT.price * qty;
+  const subtotal = lines.reduce((n, l) => n + l.product.price * l.qty, 0);
   const total = subtotal + CHECKOUT.shippingFee;
   const field = (key) => ({
     value: form[key],
@@ -83,7 +98,8 @@ export default function Checkout() {
     }
     const order = {
       no: makeOrderNo(),
-      qty,
+      items: lines.map((l) => ({ id: l.id, name: l.product.name, price: l.product.price, qty: l.qty })),
+      qty: count,
       total,
       pay: method.name,
       name: form.name.trim(),
@@ -107,6 +123,7 @@ export default function Checkout() {
 
   const complete = (order) => {
     saveOrder(order);
+    if (!direct) cart.clear();
     navigate('/order-complete', { state: order, replace: true });
   };
   const approveSheet = () => complete(sheetOrder);
@@ -115,6 +132,25 @@ export default function Checkout() {
     setPaying(false);
     setPayNotice('결제를 취소했어요. 다시 시도하거나 다른 결제 수단을 골라 주세요.');
   }, []);
+
+  // 장바구니로 들어왔는데 비어 있으면 주문서 대신 안내
+  if (!lines.length) {
+    return (
+      <section className="section section--tight">
+        <div className="container done">
+          <h1>주문할 상품이 없어요</h1>
+          <p className="done__lead">제품을 장바구니에 담거나 바로 구매해 주세요.</p>
+          <Link to="/product" className="btn btn--primary">
+            제품 보러 가기
+          </Link>
+        </div>
+      </section>
+    );
+  }
+
+  const back = direct
+    ? { to: `/product/${lines[0].id}`, label: '← 상품 정보로 돌아가기' }
+    : { to: '/cart', label: '← 장바구니로 돌아가기' };
 
   return (
     <section className="section section--tight">
@@ -130,18 +166,22 @@ export default function Checkout() {
           <div className="checkout__main">
             <Reveal as="fieldset" className="co-card">
               <legend className="co-card__title">주문 상품</legend>
-              <div className="co-item">
-                <img src={lampPhoto} alt="" className="co-item__img" />
-                <div className="co-item__info">
-                  <strong>{PRODUCT.name}</strong>
-                  <span className="co-item__mood">
-                    <i style={{ background: color.hex }} />
-                    체험한 분위기: {moodName} · {color.name} · {brightness}%
-                  </span>
-                  <span className="co-item__price">{formatWon(PRODUCT.price)}</span>
-                </div>
-                <QtyStepper value={qty} onChange={setQty} />
-              </div>
+              <ul className="co-items">
+                {lines.map((l) => (
+                  <li key={l.id} className="co-item">
+                    <ProductThumb id={l.id} />
+                    <div className="co-item__info">
+                      <strong>{l.product.name}</strong>
+                      <span className="co-item__price">{formatWon(l.product.price)}</span>
+                    </div>
+                    <QtyStepper value={l.qty} onChange={(q) => changeQty(l.id, q)} label={`${l.product.name} 수량`} />
+                  </li>
+                ))}
+              </ul>
+              <p className="co-item__mood">
+                <i style={{ background: color.hex }} />
+                체험한 분위기: {moodName} · {color.name} · {brightness}%
+              </p>
             </Reveal>
 
             <Reveal as="fieldset" className="co-card" delay={0.05}>
@@ -210,12 +250,14 @@ export default function Checkout() {
           <Reveal as="aside" className="checkout__summary co-card" from="right" delay={0.1}>
             <h2 className="co-card__title">결제 금액</h2>
             <dl className="co-sum">
-              <div>
-                <dt>상품 금액</dt>
-                <dd>
-                  {formatWon(PRODUCT.price)} × {qty}
-                </dd>
-              </div>
+              {lines.map((l) => (
+                <div key={l.id}>
+                  <dt>
+                    {l.product.short} × {l.qty}
+                  </dt>
+                  <dd>{formatWon(l.product.price * l.qty)}</dd>
+                </div>
+              ))}
               <div>
                 <dt>배송비</dt>
                 <dd>{CHECKOUT.shippingFee ? formatWon(CHECKOUT.shippingFee) : '무료'}</dd>
@@ -242,8 +284,8 @@ export default function Checkout() {
                 {payNotice}
               </p>
             )}
-            <Link to="/product" className="co-back">
-              ← 상품 정보로 돌아가기
+            <Link to={back.to} className="co-back">
+              {back.label}
             </Link>
           </Reveal>
         </form>
@@ -251,7 +293,7 @@ export default function Checkout() {
         <DemoPaySheet
           method={sheetOrder ? method : null}
           amount={total}
-          qty={qty}
+          lines={lines}
           onApprove={approveSheet}
           onCancel={cancelSheet}
         />

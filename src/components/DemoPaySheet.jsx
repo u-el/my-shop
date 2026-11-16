@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import useModalFocus from './useModalFocus.js';
-import { PRODUCT, formatWon } from '../data/content.js';
+import { formatWon } from '../data/content.js';
 
 // 간편결제 데모 승인 창
 // 실제 카카오페이·네이버페이와 연결되지 않고, 결제 정보도 받지 않는다.
-export default function DemoPaySheet({ method, amount, qty, onApprove, onCancel }) {
+export default function DemoPaySheet({ method, amount, lines = [], onApprove, onCancel }) {
   const [approving, setApproving] = useState(false);
   const sheetRef = useRef(null);
   useModalFocus(sheetRef, !!method);
@@ -44,12 +44,12 @@ export default function DemoPaySheet({ method, amount, qty, onApprove, onCancel 
         </div>
 
         <dl className="paysheet__info">
-          <div>
-            <dt>상품</dt>
-            <dd>
-              {PRODUCT.name} × {qty}
-            </dd>
-          </div>
+          {lines.map((l) => (
+            <div key={l.id}>
+              <dt>{l.product.name}</dt>
+              <dd>× {l.qty}</dd>
+            </div>
+          ))}
           <div className="paysheet__amount">
             <dt>결제 금액</dt>
             <dd>{formatWon(amount)}</dd>

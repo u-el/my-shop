@@ -4,6 +4,8 @@ import ScrollExpand from '../components/ScrollExpand/ScrollExpand.jsx';
 import heroRoom from '../assets/hero-room.svg';
 import Reveal from '../components/Reveal.jsx';
 import { COLORS, FEATURES, PRESETS, REVIEWS, REVIEWS_ARE_SAMPLES, findColor, findPreset } from '../data/content.js';
+import { PRODUCTS } from '../data/products.js';
+import ProductCard from '../components/ProductCard.jsx';
 
 // 특징 카드 아이콘 (선 아이콘, currentColor)
 const ICONS = {
@@ -132,6 +134,24 @@ export default function Home() {
               체험 시작하기
             </Link>
           </Reveal>
+        </div>
+      </section>
+
+      {/* S-01-05 제품 라인업 */}
+      <section className="section lineup">
+        <div className="container">
+          <Reveal className="lineup__head">
+            <p className="eyebrow">제품</p>
+            <h2>두고 쓰는 무드등, 끼워 쓰는 전구</h2>
+            <p>같은 앱, 같은 색. 하나만 써도, 함께 켜도 좋아요.</p>
+          </Reveal>
+          <div className="plist">
+            {PRODUCTS.map((p, i) => (
+              <Reveal key={p.id} delay={0.1 + i * 0.1}>
+                <ProductCard product={p} />
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 

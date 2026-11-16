@@ -1,4 +1,5 @@
-import { PRODUCT, formatWon } from '../data/content.js';
+import { formatWon } from '../data/content.js';
+import { orderLines } from '../data/products.js';
 
 // 주문 상세 표 — 주문 완료와 주문 조회에서 함께 쓴다
 export default function OrderInfo({ order, showStatus = false }) {
@@ -24,8 +25,12 @@ export default function OrderInfo({ order, showStatus = false }) {
       )}
       <div>
         <dt>상품</dt>
-        <dd>
-          {PRODUCT.name} × {order.qty}
+        <dd className="order-lines">
+          {orderLines(order).map((l) => (
+            <span key={l.id}>
+              {l.name} × {l.qty}
+            </span>
+          ))}
         </dd>
       </div>
       <div>

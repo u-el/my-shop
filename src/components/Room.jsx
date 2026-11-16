@@ -2,8 +2,10 @@ import { useId } from 'react';
 
 // 가상 공간: 자취방 일러스트(SVG). 색상·밝기가 실시간으로 반영된다.
 // plain=true 이면 루무드 없이 일반 천장등만 켠 상태(비교용).
+// fixture: 켜는 조명 — 'lamp'(협탁 위 무드 조명) | 'bulb'(천장 소켓의 스마트 전구) | 'both'
 
 const LAMP = { x: 605, y: 398 };
+const BULB = { x: 470, y: 118 };
 
 function mixWithWhite(hex, amount) {
   const n = parseInt(hex.slice(1), 16);
@@ -13,12 +15,17 @@ function mixWithWhite(hex, amount) {
   return `rgb(${ch.join(',')})`;
 }
 
-export default function Room({ color = '#ffaa5c', brightness = 60, plain = false, slice = false, className, title }) {
+export default function Room({ color = '#ffaa5c', brightness = 60, fixture = 'lamp', plain = false, slice = false, className, title }) {
   const uid = useId().replace(/[^a-zA-Z0-9]/g, '');
   const b = plain ? 0 : Math.max(0, Math.min(100, brightness)) / 100;
-  const darkness = plain ? 0.06 : 0.9 - 0.5 * b;
+  const lampOn = !plain && fixture !== 'bulb';
+  const bulbOn = !plain && fixture !== 'lamp';
+  // 천장 전구는 방 전체를 비추므로 무드 조명만 켰을 때보다 덜 어둡다
+  const darkness = plain ? 0.06 : (bulbOn ? 0.8 : 0.9) - (bulbOn ? 0.6 : 0.5) * b;
   const glowR = 280 + 460 * b;
-  const globe = plain ? '#ddd3c6' : mixWithWhite(color, 0.55 - 0.25 * b);
+  const bulbR = 420 + 560 * b;
+  const globe = lampOn ? mixWithWhite(color, 0.55 - 0.25 * b) : '#ddd3c6';
+  const bulbGlass = bulbOn ? mixWithWhite(color, 0.5 - 0.25 * b) : plain ? '#fbf7ee' : '#d9d0c4';
 
   return (
     <svg
@@ -32,6 +39,11 @@ export default function Room({ color = '#ffaa5c', brightness = 60, plain = false
         <radialGradient id={`glow${uid}`} cx={LAMP.x} cy={LAMP.y} r={glowR} gradientUnits="userSpaceOnUse">
           <stop offset="0" stopColor={color} stopOpacity={Math.min(1, 0.6 + 0.5 * b)} />
           <stop offset="0.35" stopColor={color} stopOpacity={0.25 + 0.4 * b} />
+          <stop offset="1" stopColor={color} stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id={`bulbglow${uid}`} cx={BULB.x} cy={BULB.y} r={bulbR} gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor={color} stopOpacity={Math.min(1, 0.5 + 0.5 * b)} />
+          <stop offset="0.4" stopColor={color} stopOpacity={0.2 + 0.35 * b} />
           <stop offset="1" stopColor={color} stopOpacity="0" />
         </radialGradient>
         <filter id={`blur${uid}`} x="-100%" y="-100%" width="300%" height="300%">
@@ -102,15 +114,27 @@ export default function Room({ color = '#ffaa5c', brightness = 60, plain = false
       <circle cx="605" cy="490" r="3.5" fill="#6b4f39" />
 
       {/* 조명 색 틴트 → 밤의 어둠 → 빛 번짐 */}
-      <rect width="1200" height="700" fill={color} opacity={0.45 * b} style={{ mixBlendMode: 'soft-light' }} />
+      {!plain && (
+        <rect width="1200" height="700" fill={color} opacity={(bulbOn ? 0.6 : 0.45) * b} style={{ mixBlendMode: 'soft-light' }} />
+      )}
       {plain && <rect width="1200" height="700" fill="#eef3ff" opacity="0.22" style={{ mixBlendMode: 'soft-light' }} />}
       <rect width="1200" height="700" fill="#140d08" opacity={darkness} />
-      <rect width="1200" height="700" fill={`url(#glow${uid})`} style={{ mixBlendMode: 'screen' }} />
+      {lampOn && <rect width="1200" height="700" fill={`url(#glow${uid})`} style={{ mixBlendMode: 'screen' }} />}
+      {bulbOn && <rect width="1200" height="700" fill={`url(#bulbglow${uid})`} style={{ mixBlendMode: 'screen' }} />}
+
+      {/* 천장 펜던트 등 (소켓에 스마트 전구) */}
+      <line x1={BULB.x} y1="0" x2={BULB.x} y2={BULB.y - 46} stroke="#4a3a2e" strokeWidth="3" />
+      <path d={`M${BULB.x - 38} ${BULB.y - 18} q38 -40 76 0 z`} fill="#3f3128" />
+      <rect x={BULB.x - 9} y={BULB.y - 50} width="18" height="18" rx="3" fill="#4a3a2e" />
+      {bulbOn && (
+        <circle cx={BULB.x} cy={BULB.y + 6} r={30 + 34 * b} fill={color} opacity={0.35 + 0.55 * b} filter={`url(#blur${uid})`} />
+      )}
+      <circle cx={BULB.x} cy={BULB.y + 4} r="20" fill={bulbGlass} />
 
       {/* 무드 조명 본체 */}
       <ellipse cx={LAMP.x} cy="453" rx="26" ry="6" fill="#5c4432" />
       <rect x={LAMP.x - 4} y="424" width="8" height="30" fill="#6b4f39" />
-      {!plain && (
+      {lampOn && (
         <circle cx={LAMP.x} cy={LAMP.y} r={36 + 40 * b} fill={color} opacity={0.35 + 0.55 * b} filter={`url(#blur${uid})`} />
       )}
       <circle cx={LAMP.x} cy={LAMP.y} r="34" fill={globe} />
