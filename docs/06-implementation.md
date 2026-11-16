@@ -10,6 +10,12 @@ npm run dev      # 개발 서버
 npm run build    # dist/ 에 정적 파일 생성
 ```
 
+## 배포
+
+- GitHub Pages: https://u-el.github.io/my-shop/
+- `main`에 push하면 `.github/workflows/deploy.yml`이 자동으로 빌드·배포
+- 저장소 Settings › Pages › Source가 **GitHub Actions**로 설정되어 있어야 함
+
 ## 기술
 
 - React + Vite, react-router-dom (`/` 메인, `/experience` 체험, `/product` 상품 정보)
