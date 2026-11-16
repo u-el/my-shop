@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import useModalFocus from './useModalFocus.js';
 
 // 카카오(다음) 우편번호 서비스 — 무료, API 키 불필요
 // https://postcode.map.daum.net/guide
@@ -34,8 +35,12 @@ const toAddress = (d) => {
 };
 
 // 주소 검색 레이어. 고르면 onSelect({ zonecode, address })를 부르고 닫힌다.
-export default function AddressSearch({ open, onClose, onSelect }) {
+// focusAfterSelect: 주소를 고른 뒤 포커스를 옮길 입력칸 id (예: 상세 주소)
+export default function AddressSearch({ open, onClose, onSelect, focusAfterSelect }) {
   const boxRef = useRef(null);
+  const panelRef = useRef(null);
+  const returnTo = useRef(null);
+  useModalFocus(panelRef, open, returnTo);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -48,6 +53,7 @@ export default function AddressSearch({ open, onClose, onSelect }) {
         boxRef.current.innerHTML = '';
         new window.daum.Postcode({
           oncomplete: (d) => {
+            if (focusAfterSelect) returnTo.current = document.getElementById(focusAfterSelect);
             onSelect({ zonecode: d.zonecode, address: toAddress(d) });
             onClose();
           },
@@ -62,13 +68,13 @@ export default function AddressSearch({ open, onClose, onSelect }) {
       alive = false;
       window.removeEventListener('keydown', onKey);
     };
-  }, [open, onClose, onSelect]);
+  }, [open, onClose, onSelect, focusAfterSelect]);
 
   if (!open) return null;
 
   return (
     <div className="addr-layer" onClick={onClose}>
-      <div className="addr-layer__panel" role="dialog" aria-modal="true" aria-label="주소 검색" onClick={(e) => e.stopPropagation()}>
+      <div ref={panelRef} className="addr-layer__panel" role="dialog" aria-modal="true" aria-label="주소 검색" onClick={(e) => e.stopPropagation()}>
         <div className="addr-layer__head">
           <strong>주소 검색</strong>
           <button type="button" className="addr-layer__close" onClick={onClose} aria-label="닫기">

@@ -46,11 +46,10 @@ export default function Checkout() {
   const method = CHECKOUT.payMethods.find((m) => m.id === pay);
   const [addrOpen, setAddrOpen] = useState(false);
   const closeAddr = useCallback(() => setAddrOpen(false), []);
-  // 주소 검색에서 고르면 우편번호·주소를 채우고 상세 주소 칸으로 이동
+  // 주소 검색에서 고르면 우편번호·주소를 채운다 (포커스는 AddressSearch가 상세 주소 칸으로 옮긴다)
   const pickAddress = useCallback(({ zonecode, address }) => {
     setForm((f) => ({ ...f, zonecode, address }));
     setErrors((prev) => without(prev, 'address'));
-    setTimeout(() => document.getElementById('co-detail')?.focus(), 0);
   }, []);
 
   const subtotal = PRODUCT.price * qty;
@@ -82,7 +81,6 @@ export default function Checkout() {
       document.getElementById(`co-${Object.keys(e)[0]}`)?.focus();
       return;
     }
-    setPaying(true);
     const order = {
       no: makeOrderNo(),
       qty,
@@ -97,10 +95,12 @@ export default function Checkout() {
     };
     setPayNotice('');
     // 간편결제는 데모 승인 창을 먼저 띄운다
+    // (결제 버튼을 비활성화하지 않아야 창을 닫은 뒤 포커스가 버튼으로 돌아온다)
     if (method.easy) {
       setSheetOrder(order);
       return;
     }
+    setPaying(true);
     // 데모: 결제창 대신 잠깐 기다린 뒤 완료 화면으로
     setTimeout(() => complete(order), 900);
   };
@@ -247,7 +247,7 @@ export default function Checkout() {
             </Link>
           </Reveal>
         </form>
-        <AddressSearch open={addrOpen} onClose={closeAddr} onSelect={pickAddress} />
+        <AddressSearch open={addrOpen} onClose={closeAddr} onSelect={pickAddress} focusAfterSelect="co-detail" />
         <DemoPaySheet
           method={sheetOrder ? method : null}
           amount={total}

@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import useModalFocus from './useModalFocus.js';
 import { PRODUCT, formatWon } from '../data/content.js';
 
 // 간편결제 데모 승인 창
 // 실제 카카오페이·네이버페이와 연결되지 않고, 결제 정보도 받지 않는다.
 export default function DemoPaySheet({ method, amount, qty, onApprove, onCancel }) {
   const [approving, setApproving] = useState(false);
+  const sheetRef = useRef(null);
+  useModalFocus(sheetRef, !!method);
 
   useEffect(() => {
     if (!method) return undefined;
@@ -25,6 +28,7 @@ export default function DemoPaySheet({ method, amount, qty, onApprove, onCancel 
   return (
     <div className="addr-layer" onClick={approving ? undefined : onCancel}>
       <div
+        ref={sheetRef}
         className={`paysheet paysheet--${method.brand}`}
         role="dialog"
         aria-modal="true"
@@ -60,7 +64,7 @@ export default function DemoPaySheet({ method, amount, qty, onApprove, onCancel 
           <button type="button" className="btn btn--ghost" onClick={onCancel} disabled={approving}>
             취소
           </button>
-          <button type="button" className="btn paysheet__approve" onClick={approve} disabled={approving} autoFocus>
+          <button type="button" className="btn paysheet__approve" onClick={approve} disabled={approving} data-autofocus>
             {approving ? '승인 중…' : `${formatWon(amount)} 결제 승인`}
           </button>
         </div>
