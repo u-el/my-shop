@@ -51,8 +51,16 @@ export const FEATURES = [
   { icon: 'battery', title: '선 없이 어디서나', desc: 'USB-C로 충전하면 최대 8시간. 손바닥만 한 크기라 어디든 둘 수 있어요.' },
 ];
 
-// B-03 외부 스토어 (임시안: 스토어 종류·주소 미정 → '#')
-export const STORE = {
-  name: '외부 스토어',
-  url: '#',
+// 주문·결제 (데모: 실제 결제는 일어나지 않음)
+// 임시안: 배송비·최대 수량·결제 수단
+export const CHECKOUT = {
+  shippingFee: 0,
+  maxQty: 5,
+  payMethods: [
+    { id: 'card', name: '신용·체크카드' },
+    { id: 'easy', name: '간편결제' },
+    { id: 'bank', name: '무통장 입금' },
+  ],
 };
+
+export const formatWon = (n) => `${n.toLocaleString('ko-KR')}원`;

@@ -1,7 +1,9 @@
-import { Link } from 'react-router-dom';
-import { PRESETS, PRODUCT, STORE } from '../data/content.js';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { PRESETS, PRODUCT, formatWon } from '../data/content.js';
 import { useLight } from '../context/LightContext.jsx';
 import Reveal from '../components/Reveal.jsx';
+import QtyStepper from '../components/QtyStepper.jsx';
 import lampPhoto from '../assets/product-lamp.jpg';
 
 // 실제 램프 사진 위에, 체험에서 고른 빛 색과 밝기를 겹쳐 보여 준다.
@@ -30,7 +32,9 @@ function LampPhoto({ color, brightness }) {
 export default function Product() {
   const { presetId, color, brightness } = useLight();
   const moodName = presetId ? PRESETS.find((p) => p.id === presetId).name : '나만의 조합';
-  const storeReady = STORE.url && STORE.url !== '#';
+  const navigate = useNavigate();
+  const [qty, setQty] = useState(1);
+  const buy = () => navigate(`/checkout?qty=${qty}`);
 
   return (
     <>
@@ -55,6 +59,19 @@ export default function Product() {
                 </Reveal>
               ))}
             </dl>
+            {/* B-02 바로 구매 — 수량을 고르고 주문서로 */}
+            <div className="purchase">
+              <div className="purchase__row">
+                <span className="purchase__label">수량</span>
+                <QtyStepper value={qty} onChange={setQty} />
+                <span className="purchase__total">
+                  총 <strong>{formatWon(PRODUCT.price * qty)}</strong>
+                </span>
+              </div>
+              <button type="button" className="btn btn--primary btn--block btn--lg" onClick={buy}>
+                바로 구매하기
+              </button>
+            </div>
           </Reveal>
         </div>
       </section>
@@ -71,20 +88,9 @@ export default function Product() {
             {moodName} · {color.name} · {brightness}%
             <Link to="/experience">다시 체험하기</Link>
           </div>
-          <a
-            className="btn btn--primary btn--lg"
-            href={STORE.url}
-            target={storeReady ? '_blank' : undefined}
-            rel={storeReady ? 'noopener noreferrer' : undefined}
-            onClick={(e) => {
-              if (!storeReady) {
-                e.preventDefault();
-                alert('외부 스토어 링크는 준비 중이에요.');
-              }
-            }}
-          >
-            {PRODUCT.price.toLocaleString('ko-KR')}원 · 외부 스토어에서 구매하기 ↗
-          </a>
+          <button type="button" className="btn btn--primary btn--lg" onClick={buy}>
+            {formatWon(PRODUCT.price * qty)} · 바로 구매하기
+          </button>
         </Reveal>
       </section>
     </>

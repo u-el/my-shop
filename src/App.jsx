@@ -5,6 +5,8 @@ import Footer from './components/Footer.jsx';
 import Home from './pages/Home.jsx';
 import Experience from './pages/Experience.jsx';
 import Product from './pages/Product.jsx';
+import Checkout from './pages/Checkout.jsx';
+import OrderComplete from './pages/OrderComplete.jsx';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -25,6 +27,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/experience" element={<Experience />} />
           <Route path="/product" element={<Product />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/order-complete" element={<OrderComplete />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </main>
