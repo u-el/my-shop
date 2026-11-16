@@ -64,3 +64,21 @@ export const CHECKOUT = {
 };
 
 export const formatWon = (n) => `${n.toLocaleString('ko-KR')}원`;
+
+// 푸터 사업자·고객센터 정보
+// ⚠ 임시안: 실제 사업자 정보가 아니에요. 사업자 등록 후 실제 값으로 바꿔 주세요.
+export const COMPANY = {
+  name: '루무드(LUMOOD)',
+  ceo: 'OOO',
+  bizNo: '000-00-00000',
+  mailOrderNo: '제0000-서울OO-0000호',
+  address: '서울특별시 OO구 OO로 00, 0층',
+  privacyOfficer: 'OOO',
+  cs: {
+    phone: '0000-0000',
+    hours: '평일 10:00 ~ 17:00',
+    lunch: '점심 12:00 ~ 13:00',
+    off: '주말·공휴일 휴무',
+    email: 'help@lumood.example',
+  },
+};

@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { CHECKOUT, PRESETS, PRODUCT, formatWon } from '../data/content.js';
 import { useLight } from '../context/LightContext.jsx';
 import QtyStepper from '../components/QtyStepper.jsx';
+import AddressSearch from '../components/AddressSearch.jsx';
 import Reveal from '../components/Reveal.jsx';
 import lampPhoto from '../assets/product-lamp.jpg';
 
@@ -32,11 +33,19 @@ export default function Checkout() {
     const n = Number(params.get('qty'));
     return Number.isInteger(n) && n >= 1 ? Math.min(n, CHECKOUT.maxQty) : 1;
   });
-  const [form, setForm] = useState({ name: '', phone: '', address: '', detail: '', memo: MEMOS[0], memoText: '' });
+  const [form, setForm] = useState({ name: '', phone: '', zonecode: '', address: '', detail: '', memo: MEMOS[0], memoText: '' });
   const [pay, setPay] = useState(CHECKOUT.payMethods[0].id);
   const [agree, setAgree] = useState(false);
   const [errors, setErrors] = useState({});
   const [paying, setPaying] = useState(false);
+  const [addrOpen, setAddrOpen] = useState(false);
+  const closeAddr = useCallback(() => setAddrOpen(false), []);
+  // 주소 검색에서 고르면 우편번호·주소를 채우고 상세 주소 칸으로 이동
+  const pickAddress = useCallback(({ zonecode, address }) => {
+    setForm((f) => ({ ...f, zonecode, address }));
+    setErrors((prev) => without(prev, 'address'));
+    setTimeout(() => document.getElementById('co-detail')?.focus(), 0);
+  }, []);
 
   const subtotal = PRODUCT.price * qty;
   const total = subtotal + CHECKOUT.shippingFee;
@@ -54,7 +63,7 @@ export default function Checkout() {
     const e = {};
     if (!form.name.trim()) e.name = '받는 분 이름을 입력해 주세요.';
     if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(form.phone.trim())) e.phone = '휴대폰 번호를 정확히 입력해 주세요. (예: 010-1234-5678)';
-    if (!form.address.trim()) e.address = '배송 주소를 입력해 주세요.';
+    if (!form.address.trim()) e.address = '주소 검색으로 배송 주소를 입력해 주세요.';
     if (!agree) e.agree = '주문 내용 확인에 동의해 주세요.';
     return e;
   };
@@ -74,7 +83,7 @@ export default function Checkout() {
       total,
       pay: CHECKOUT.payMethods.find((m) => m.id === pay).name,
       name: form.name.trim(),
-      address: `${form.address.trim()} ${form.detail.trim()}`.trim(),
+      address: `${form.zonecode ? `[${form.zonecode}] ` : ''}${form.address.trim()} ${form.detail.trim()}`.trim(),
       mood: `${moodName} · ${color.name} · ${brightness}%`,
       colorHex: color.hex,
     };
@@ -127,14 +136,25 @@ export default function Checkout() {
                   <input id="co-phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="010-1234-5678" {...field('phone')} />
                   {errors.phone && <em className="co-error">{errors.phone}</em>}
                 </label>
-                <label className="co-field co-field--wide">
-                  <span>주소</span>
-                  <input id="co-address" autoComplete="street-address" placeholder="도로명 주소" {...field('address')} />
+                <div className="co-field co-field--wide">
+                  <label htmlFor="co-address">주소</label>
+                  <div className="co-addr">
+                    <input className="co-addr__zip" aria-label="우편번호" placeholder="우편번호" value={form.zonecode} readOnly tabIndex={-1} />
+                    <button type="button" className="btn btn--ghost co-addr__btn" onClick={() => setAddrOpen(true)}>
+                      주소 검색
+                    </button>
+                  </div>
+                  <input
+                    id="co-address"
+                    autoComplete="street-address"
+                    placeholder="주소 검색 버튼을 눌러 도로명 주소를 찾아 주세요"
+                    {...field('address')}
+                  />
                   {errors.address && <em className="co-error">{errors.address}</em>}
-                </label>
+                </div>
                 <label className="co-field co-field--wide">
                   <span>상세 주소</span>
-                  <input autoComplete="address-line2" placeholder="동·호수 (선택)" {...field('detail')} />
+                  <input id="co-detail" autoComplete="address-line2" placeholder="동·호수 (선택)" {...field('detail')} />
                 </label>
                 <label className="co-field co-field--wide">
                   <span>배송 메모</span>
@@ -196,6 +216,7 @@ export default function Checkout() {
             </Link>
           </Reveal>
         </form>
+        <AddressSearch open={addrOpen} onClose={closeAddr} onSelect={pickAddress} />
       </div>
     </section>
   );
