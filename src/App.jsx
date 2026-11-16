@@ -8,7 +8,10 @@ import Product from './pages/Product.jsx';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
-  useEffect(() => window.scrollTo(0, 0), [pathname]);
+  // 최신 브라우저는 window.scrollTo가 Promise를 돌려주므로, 그 값을 useEffect의 cleanup으로 넘기지 않게 중괄호로 감싼다.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
   return null;
 }
 
