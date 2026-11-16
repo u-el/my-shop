@@ -37,13 +37,18 @@ export default function Footer() {
         </div>
 
         <div className="footer__bottom">
-          {/* 약관 페이지는 아직 없어 글자로만 둔다 */}
           <ul className="footer__policy">
-            <li>이용약관</li>
             <li>
-              <strong>개인정보처리방침</strong>
+              <Link to="/terms">이용약관</Link>
             </li>
-            <li>교환·반품 안내</li>
+            <li>
+              <Link to="/privacy">
+                <strong>개인정보처리방침</strong>
+              </Link>
+            </li>
+            <li>
+              <Link to="/refund">교환·반품 안내</Link>
+            </li>
           </ul>
           <address className="footer__biz">
             <span>상호 {COMPANY.name}</span>

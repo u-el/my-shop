@@ -27,7 +27,7 @@ jobs:
       - run: npm run build
       # 하위 페이지를 직접 열어도 200으로 응답하도록 경로별 index.html 생성 (+ 그 외 경로용 404.html)
       - run: |
-          for p in experience product checkout order-complete; do mkdir -p dist/$p && cp dist/index.html dist/$p/index.html; done
+          for p in experience product checkout order-complete terms privacy refund; do mkdir -p dist/$p && cp dist/index.html dist/$p/index.html; done
           cp dist/index.html dist/404.html
       - uses: actions/upload-pages-artifact@v3
         with:
