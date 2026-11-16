@@ -51,6 +51,34 @@ export const FEATURES = [
   { icon: 'battery', title: '선 없이 어디서나', desc: 'USB-C로 충전하면 최대 8시간. 손바닥만 한 크기라 어디든 둘 수 있어요.' },
 ];
 
+// S-01-04 후기
+// ⚠ 예시 후기: 출시 전이라 실제 구매 후기가 아니에요. 화면에도 '예시'라고 표시해요.
+//   실제 후기가 모이면 아래 내용을 바꾸고 REVIEWS_ARE_SAMPLES를 false로 바꿔 주세요.
+export const REVIEWS_ARE_SAMPLES = true;
+export const REVIEWS = [
+  {
+    name: '김*진',
+    room: '원룸 자취',
+    presetId: 'rest',
+    rating: 5,
+    text: '퇴근하고 형광등 대신 이것만 켜 두면 방이 카페처럼 바뀌어요. 체험해 본 앰버 색 그대로라 고민 없이 골랐어요.',
+  },
+  {
+    name: '이*우',
+    room: '기숙사',
+    presetId: 'focus',
+    rating: 5,
+    text: '과제할 때는 하얀 빛, 쉴 때는 따뜻한 빛으로 바꿔 써요. 선이 없어서 책상이랑 침대 옆을 오가며 쓰기 편해요.',
+  },
+  {
+    name: '박*아',
+    room: '신혼집 침실',
+    presetId: 'sleep',
+    rating: 4,
+    text: '잠들기 전에 밝기를 아주 낮게 해 두면 눈이 편해요. 앱으로도 끌 수 있어서 침대에서 일어날 필요가 없어요.',
+  },
+];
+
 // 주문·결제 (데모: 실제 결제는 일어나지 않음)
 // 임시안: 배송비·최대 수량·결제 수단
 export const CHECKOUT = {

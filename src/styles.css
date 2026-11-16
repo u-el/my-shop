@@ -350,3 +350,19 @@ legend.co-card__title + * { clear: both; }
 .legal__section p + p, .legal__section p + ul, .legal__section ul + p { margin-top: 8px; }
 .legal__section ul { margin: 0; padding-left: 20px; }
 @media (max-width: 560px) { .legal__doc { padding: 28px 22px; } }
+
+/* 메인 후기 */
+.reviews { background: var(--surface-warm); }
+.reviews__head { text-align: center; margin-bottom: 44px; }
+.reviews__head h2 { margin-top: 0; }
+.reviews__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.review { display: flex; flex-direction: column; gap: 16px; padding: 28px 26px; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); }
+.review__stars { color: #e39a4f; font-size: 17px; letter-spacing: 2px; }
+.review__stars-off { color: #e7dccd; }
+.review__text { margin: 0; flex: 1; font-size: 16px; line-height: 1.75; color: var(--ink); }
+.review__text::before { content: '“'; display: block; height: 22px; font-size: 44px; line-height: 1; color: #e2c4a6; font-family: Georgia, serif; }
+.review__by { display: flex; flex-direction: column; gap: 6px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 14px; color: var(--ink-soft); }
+.review__mood { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: var(--ink); }
+.review__mood i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); box-shadow: 0 0 8px var(--c); }
+.review__sample { margin-left: 8px; padding: 1px 7px; border-radius: 999px; background: #fff1e4; color: #9a5326; font-size: 12px; font-style: normal; font-weight: 600; }
+@media (max-width: 960px) { .reviews__list { grid-template-columns: 1fr; max-width: 560px; margin: 0 auto; } }

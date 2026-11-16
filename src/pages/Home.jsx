@@ -3,7 +3,7 @@ import Room from '../components/Room.jsx';
 import ScrollExpand from '../components/ScrollExpand/ScrollExpand.jsx';
 import heroRoom from '../assets/hero-room.svg';
 import Reveal from '../components/Reveal.jsx';
-import { COLORS, FEATURES, PRESETS, findColor } from '../data/content.js';
+import { COLORS, FEATURES, PRESETS, REVIEWS, REVIEWS_ARE_SAMPLES, findColor, findPreset } from '../data/content.js';
 
 // 특징 카드 아이콘 (선 아이콘, currentColor)
 const ICONS = {
@@ -132,6 +132,44 @@ export default function Home() {
               체험 시작하기
             </Link>
           </Reveal>
+        </div>
+      </section>
+
+      {/* S-01-04 후기 */}
+      <section className="section reviews">
+        <div className="container">
+          <Reveal className="reviews__head">
+            <p className="eyebrow">사용 후기</p>
+            <h2>불을 켠 사람들의 이야기</h2>
+            {REVIEWS_ARE_SAMPLES && (
+              <p className="demo-note">출시 전이라 아래는 실제 구매 후기가 아닌 예시 후기예요.</p>
+            )}
+          </Reveal>
+          <ul className="reviews__list">
+            {REVIEWS.map((r, i) => {
+              const preset = findPreset(r.presetId);
+              const color = findColor(preset.colorId);
+              return (
+                <Reveal as="li" key={r.name} className="review" delay={0.1 + i * 0.1}>
+                  <span className="review__stars" role="img" aria-label={`별점 5점 만점에 ${r.rating}점`}>
+                    {'★'.repeat(r.rating)}
+                    <span className="review__stars-off">{'★'.repeat(5 - r.rating)}</span>
+                  </span>
+                  <blockquote className="review__text">{r.text}</blockquote>
+                  <footer className="review__by">
+                    <span className="review__mood" style={{ '--c': color.hex }}>
+                      <i />
+                      {preset.name} · {color.name}
+                    </span>
+                    <span>
+                      {r.name} · {r.room}
+                      {REVIEWS_ARE_SAMPLES && <em className="review__sample">예시</em>}
+                    </span>
+                  </footer>
+                </Reveal>
+              );
+            })}
+          </ul>
         </div>
       </section>
     </>
