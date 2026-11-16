@@ -56,10 +56,12 @@ p { margin: 0; }
 .gnb { position: sticky; top: 0; z-index: 10; background: rgba(250, 245, 238, .88); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
 .gnb__inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
 .gnb__logo { font-weight: 800; letter-spacing: 0.18em; font-size: 20px; text-decoration: none; }
-.gnb__nav { display: flex; gap: 36px; }
+.gnb__nav { display: flex; align-items: center; gap: 36px; }
 .gnb__nav a { text-decoration: none; color: var(--ink-soft); font-weight: 500; padding: 6px 0; border-bottom: 2px solid transparent; }
 .gnb__nav a:hover { color: var(--ink); }
 .gnb__nav a.active { color: var(--ink); font-weight: 700; border-color: var(--accent); }
+.gnb__nav .gnb__buy { padding: 9px 20px; border: 0; border-radius: 999px; background: var(--accent); color: #fff; font-weight: 700; box-shadow: 0 6px 16px -8px rgba(196, 112, 58, .8); transition: background .15s, transform .15s; }
+.gnb__nav .gnb__buy:hover { color: #fff; background: #b05f2c; transform: translateY(-1px); }
 
 /* P-01 첫 화면 */
 .hero { background: var(--stage); }
@@ -161,7 +163,9 @@ p { margin: 0; }
 }
 @media (max-width: 560px) {
   .container { width: calc(100% - 32px); }
-  .gnb__nav { gap: 20px; }
+  .gnb__nav { gap: 16px; font-size: 15px; }
+  .gnb__logo { font-size: 17px; letter-spacing: .14em; }
+  .gnb__nav .gnb__buy { padding: 8px 14px; }
   .stage__bar { flex-direction: column; align-items: flex-start; }
 }
 
